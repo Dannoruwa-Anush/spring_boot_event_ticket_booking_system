@@ -4,26 +4,63 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.requestDTO.UserRequestDTO;
+import com.example.demo.dto.responseDTO.UserResponseDTO;
 import com.example.demo.entity.User;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService{
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
+    private final UserMapper mapper;
 
-    UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    UserServiceImpl(UserRepository repository, UserMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
+@Override
+    public UserResponseDTO createUser(UserRequestDTO dto) {
+
+        User user = mapper.toEntity(dto);
+        User saved = repository.save(user);
+
+        return mapper.toResponseDTO(saved);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users;
+    public List<UserResponseDTO> getAllUsers() {
+
+        List<User> users = repository.findAll();
+        return mapper.toResponseDTOList(users);
     }
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public UserResponseDTO getUserById(Long id) {
+
+        User user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return mapper.toResponseDTO(user);
+    }
+
+    @Override
+    public UserResponseDTO updateUser(Long id, UserRequestDTO dto) {
+
+        User user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        mapper.updateUserFromDto(dto, user);
+
+        User updated = repository.save(user);
+
+        return mapper.toResponseDTO(updated);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
     }
 }
