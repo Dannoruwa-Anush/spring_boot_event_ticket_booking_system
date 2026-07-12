@@ -1,0 +1,62 @@
+package com.example.demo.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.dto.requestDTO.RoleRequestDTO;
+import com.example.demo.dto.responseDTO.RoleResponseDTO;
+import com.example.demo.entity.Role;
+import com.example.demo.mapper.RoleMapper;
+import com.example.demo.repository.RoleRepository;
+
+@Service
+public class RoleServiceImpl implements RoleService{
+
+    private final RoleRepository repository;
+    private final RoleMapper mapper;
+
+    public RoleServiceImpl(RoleRepository repository, RoleMapper mapper){
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
+    @Override
+    public RoleResponseDTO createRole(RoleRequestDTO roleRequestDTO) {
+        Role role = mapper.toEntity(roleRequestDTO);
+        Role saved = repository.save(role);
+
+        return mapper.toResponseDTO(saved);
+    }
+
+    @Override
+    public List<RoleResponseDTO> getAllRoles() {
+        List<Role> roles = repository.findAll();
+        return mapper.toResponseDTOList(roles);
+    }
+
+    @Override
+    public RoleResponseDTO getRoleById(Long id) {
+        Role role = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        return mapper.toResponseDTO(role);
+    }
+
+    @Override
+    public RoleResponseDTO updateRole(Long id, RoleRequestDTO roleRequestDTO) {
+        Role role = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        mapper.updateRoleFromDto(roleRequestDTO, role);
+
+        Role updated = repository.save(role);
+
+        return mapper.toResponseDTO(updated);
+    }
+
+    @Override
+    public void deleteRole(Long id) {
+        repository.deleteById(id);
+    }
+}

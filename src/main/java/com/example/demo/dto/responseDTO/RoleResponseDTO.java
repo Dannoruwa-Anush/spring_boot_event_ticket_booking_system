@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor // needed for JPA
+@NoArgsConstructor
 @AllArgsConstructor
-@Data // getters & setters
-public class UserResponseDTO {
+@Data
+public class RoleResponseDTO {
     private long id;
     private String name;
-    private String email;
-
-    private RoleResponseDTO role;
 }

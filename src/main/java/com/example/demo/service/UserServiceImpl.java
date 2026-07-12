@@ -11,20 +11,19 @@ import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
 
-    UserServiceImpl(UserRepository repository, UserMapper mapper) {
+    public UserServiceImpl(UserRepository repository, UserMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
-@Override
-    public UserResponseDTO createUser(UserRequestDTO dto) {
-
-        User user = mapper.toEntity(dto);
+    @Override
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+        User user = mapper.toEntity(userRequestDTO);
         User saved = repository.save(user);
 
         return mapper.toResponseDTO(saved);
@@ -32,14 +31,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserResponseDTO> getAllUsers() {
-
         List<User> users = repository.findAll();
         return mapper.toResponseDTOList(users);
     }
 
     @Override
     public UserResponseDTO getUserById(Long id) {
-
         User user = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -47,12 +44,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponseDTO updateUser(Long id, UserRequestDTO dto) {
-
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
         User user = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        mapper.updateUserFromDto(dto, user);
+        mapper.updateUserFromDto(userRequestDTO, user);
 
         User updated = repository.save(user);
 
