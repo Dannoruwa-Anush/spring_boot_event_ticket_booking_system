@@ -14,4 +14,6 @@ public interface UserService {
     UserResponseDTO getUserById(Long id);
     UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO);
     void deleteUser(Long id);
+
+    UserResponseDTO findUserByEmail(String email);
 }

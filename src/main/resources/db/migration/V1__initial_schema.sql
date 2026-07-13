@@ -28,6 +28,8 @@ CREATE TABLE users (
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
 
+    CONSTRAINT uq_users_email UNIQUE (email),
+    
     CONSTRAINT fk_user_role
         FOREIGN KEY (role_id)
         REFERENCES roles(id)

@@ -59,4 +59,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public UserResponseDTO findUserByEmail(String email) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return mapper.toResponseDTO(user);
+    }
 }
