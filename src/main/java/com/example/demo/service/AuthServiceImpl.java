@@ -1,0 +1,51 @@
+package com.example.demo.service;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.dto.requestDTO.LoginRequestDTO;
+import com.example.demo.dto.responseDTO.LoginResponseDTO;
+import com.example.demo.entity.User;
+import com.example.demo.mapper.AuthMapper;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.CustomUserDetailsServiceImpl;
+import com.example.demo.security.jwt.JwtUtils;
+
+@Service
+public class AuthServiceImpl implements AuthService {
+    private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsServiceImpl userDetailsService;
+    private final JwtUtils jwtUtils;
+    private final AuthMapper authMapper;
+
+    public AuthServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, CustomUserDetailsServiceImpl userDetailsService,
+            JwtUtils jwtUtils, AuthMapper authMapper) {
+        this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtils = jwtUtils;
+        this.authMapper = authMapper;
+    }
+
+    @Override
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDTO.getEmail(),
+                        loginRequestDTO.getPassword()));
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequestDTO.getEmail());
+
+        String token = jwtUtils.generateToken(userDetails);
+
+        User user = userRepository.findByEmail(loginRequestDTO.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return authMapper.toLoginResponse(token, user);
+    }
+}
