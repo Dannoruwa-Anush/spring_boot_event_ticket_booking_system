@@ -8,5 +8,7 @@ import com.example.demo.entity.User;
 public interface UserRepository extends JpaRepository<User, Long>{
     
     // Custom Quaries
+    boolean existsByRoleId(Long roleId);
+    
     Optional<User> findByEmail(String email);
 }

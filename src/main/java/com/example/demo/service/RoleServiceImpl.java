@@ -11,18 +11,21 @@ import com.example.demo.dto.responseDTO.RoleResponseDTO;
 import com.example.demo.entity.Role;
 import com.example.demo.mapper.RoleMapper;
 import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository repository;
+    private final UserRepository userRepository;
     private final RoleMapper mapper;
 
     // Logger for auditing purposes
     private static final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-    public RoleServiceImpl(RoleRepository repository, RoleMapper mapper) {
+    public RoleServiceImpl(RoleRepository repository, UserRepository userRepository, RoleMapper mapper) {
         this.repository = repository;
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
@@ -64,6 +67,10 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void deleteRole(Long id) {
+        if (userRepository.existsByRoleId(id)) {
+            throw new RuntimeException("Cannot delete role because it is assigned to a user.");
+        }
+
         repository.deleteById(id);
 
         logger.info("Role deleted successfully. ID: {}", id);
