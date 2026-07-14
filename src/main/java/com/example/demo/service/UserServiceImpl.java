@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper mapper;
     private final PasswordEncoder passwordEncoder;
+
+    // Logger for auditing purposes
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepository repository, RoleRepository roleRepository, UserMapper mapper,
             PasswordEncoder passwordEncoder) {
@@ -69,12 +74,16 @@ public class UserServiceImpl implements UserService {
 
         User updated = repository.save(user);
 
+        logger.info("User updated successfully. ID: {}", updated.getId());
+
         return mapper.toResponseDTO(updated);
     }
 
     @Override
     public void deleteUser(Long id) {
         repository.deleteById(id);
+
+        logger.info("User deleted successfully. ID: {}", id);
     }
 
     @Override

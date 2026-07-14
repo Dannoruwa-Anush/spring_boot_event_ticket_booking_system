@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.requestDTO.RoleRequestDTO;
@@ -11,12 +13,15 @@ import com.example.demo.mapper.RoleMapper;
 import com.example.demo.repository.RoleRepository;
 
 @Service
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository repository;
     private final RoleMapper mapper;
 
-    public RoleServiceImpl(RoleRepository repository, RoleMapper mapper){
+    // Logger for auditing purposes
+    private static final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
+
+    public RoleServiceImpl(RoleRepository repository, RoleMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
@@ -52,11 +57,15 @@ public class RoleServiceImpl implements RoleService{
 
         Role updated = repository.save(role);
 
+        logger.info("Role updated successfully. ID: {}", updated.getId());
+
         return mapper.toResponseDTO(updated);
     }
 
     @Override
     public void deleteRole(Long id) {
         repository.deleteById(id);
+
+        logger.info("Role deleted successfully. ID: {}", id);
     }
 }
