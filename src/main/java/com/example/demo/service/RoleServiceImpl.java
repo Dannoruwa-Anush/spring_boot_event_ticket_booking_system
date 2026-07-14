@@ -67,6 +67,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void deleteRole(Long id) {
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("Role is not found with id: " + id);
+        }
+
+        // Check if an user is associated with the role
         if (userRepository.existsByRoleId(id)) {
             throw new RuntimeException("Cannot delete role because it is assigned to a user.");
         }
