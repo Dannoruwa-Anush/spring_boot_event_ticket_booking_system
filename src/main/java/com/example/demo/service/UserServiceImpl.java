@@ -2,31 +2,48 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.requestDTO.UserRequestDTO;
 import com.example.demo.dto.responseDTO.UserResponseDTO;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+    private final RoleRepository roleRepository;
     private final UserMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository repository, UserMapper mapper) {
+    public UserServiceImpl(UserRepository repository, RoleRepository roleRepository, UserMapper mapper,
+            PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
         this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
-        User user = mapper.toEntity(userRequestDTO);
-        User saved = repository.save(user);
 
-        return mapper.toResponseDTO(saved);
+        User user = mapper.toEntity(userRequestDTO);
+
+        Role role = roleRepository.findById(userRequestDTO.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        user.setRole(role);
+
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+
+        User savedUser = repository.save(user);
+
+        return mapper.toResponseDTO(savedUser);
     }
 
     @Override
