@@ -16,35 +16,27 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "customers")
 @NoArgsConstructor // needed for JPA
 @AllArgsConstructor
 @Data // getters & setters
 @EqualsAndHashCode(callSuper = false)
- public class User extends BaseEntity{
+public class Customer extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
+    private String address;
 
     @Column(nullable = false)
-    private String password;
+    private String date_of_birth;
 
-    // User (1) : (1) Role
-    @OneToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id") // Owns the foreign key (it has @JoinColumn)
-    private Role role;
-
-    // User (1) : (1) Staff
-    @OneToOne(mappedBy = "user")
-    private Staff staff;
+    @Column(nullable = false)
+    private String phoneNo;
 
     // User (1) : (1) Customer
-    @OneToOne(mappedBy = "user")
-    private Customer customer;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }
