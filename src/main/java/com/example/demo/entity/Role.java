@@ -1,9 +1,12 @@
 package com.example.demo.entity;
 
+import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.entity.Base.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,8 +28,9 @@ public class Role extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
-    @Column(nullable = false)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    private RoleTypeEnum name;
 
     // User (1) : (1) Role
     @OneToOne(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")

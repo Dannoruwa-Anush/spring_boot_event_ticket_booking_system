@@ -6,34 +6,29 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import com.example.demo.dto.requestDTO.UserRequestDTO;
-import com.example.demo.dto.responseDTO.UserResponseDTO;
-import com.example.demo.entity.User;
+import com.example.demo.dto.requestDTO.PositionRequestDTO;
+import com.example.demo.dto.responseDTO.PositionResponseDTO;
+import com.example.demo.entity.Position;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
+public interface PositionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "role", ignore = true)
     @Mapping(target = "staff", ignore = true)
-    @Mapping(target = "customer", ignore = true)
-    User toEntity(UserRequestDTO dto);
+    Position toEnity(PositionRequestDTO dto);
 
+    PositionResponseDTO toResponseDTO(Position position);
+    List<PositionResponseDTO> toResponseDTOList(List<Position> positions);
 
-    UserResponseDTO toResponseDTO(User user);
-    List<UserResponseDTO> toResponseDTOList(List<User> users);
-    
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "role", ignore = true)
     @Mapping(target = "staff", ignore = true)
-    @Mapping(target = "customer", ignore = true)
-    void updateUserFromDto(UserRequestDTO dto, @MappingTarget User user);
+    void updatePositionFromDto(PositionRequestDTO dto, @MappingTarget Position position);
 }

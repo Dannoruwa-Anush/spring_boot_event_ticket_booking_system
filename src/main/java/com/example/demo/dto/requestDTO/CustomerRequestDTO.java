@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CustomerRequestDTO {
-    private long id;
     private String address;
     private String date_of_birth;
     private String phoneNo;
