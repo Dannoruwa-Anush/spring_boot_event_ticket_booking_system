@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
-import com.example.demo.entity.Customer;
 import com.example.demo.entity.Position;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.Staff;
