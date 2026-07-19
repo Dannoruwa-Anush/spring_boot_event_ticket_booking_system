@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.requestDTO.RoleRequestDTO;
 import com.example.demo.dto.responseDTO.RoleResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.service.RoleService;
 
 @RestController
@@ -33,8 +33,8 @@ public class RoleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoleResponseDTO>> getAllRoles() {
-        List<RoleResponseDTO> response = service.getAllRoles();
+    public ResponseEntity<PageResponseDTO<RoleResponseDTO>> getAllRoles(Pageable pageable) {
+        PageResponseDTO<RoleResponseDTO> response = service.getAllRoles(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

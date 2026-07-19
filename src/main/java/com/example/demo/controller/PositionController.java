@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.requestDTO.PositionRequestDTO;
 import com.example.demo.dto.responseDTO.PositionResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.service.PositionService;
 
 @RestController
@@ -34,8 +34,8 @@ public class PositionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PositionResponseDTO>> getAllPositions() {
-        List<PositionResponseDTO> response = service.getAllPositions();
+    public ResponseEntity<PageResponseDTO<PositionResponseDTO>> getAllPositions(Pageable pageable) {
+        PageResponseDTO<PositionResponseDTO> response = service.getAllPositions(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.example.demo.dto.requestDTO.PositionRequestDTO;
 import com.example.demo.dto.responseDTO.PositionResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Position;
 import com.example.demo.mapper.PositionMapper;
 import com.example.demo.repository.PositionRepository;
@@ -33,9 +36,18 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public List<PositionResponseDTO> getAllPositions() {
-        List<Position> positions = repository.findAll();
-        return mapper.toResponseDTOList(positions);
+    public PageResponseDTO<PositionResponseDTO> getAllPositions(Pageable pageable) {
+        Page<Position> positions = repository.findAll(pageable);
+        List<PositionResponseDTO> content = mapper.toResponseDTOList(positions.getContent());
+        
+        return new PageResponseDTO<>(
+                content,
+                positions.getNumber(),
+                positions.getSize(),
+                positions.getTotalElements(),
+                positions.getTotalPages(),
+                positions.isFirst(),
+                positions.isLast());
     }
 
     @Override

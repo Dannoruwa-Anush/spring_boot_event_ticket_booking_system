@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.dto.requestDTO.CustomerRequestDTO;
 import com.example.demo.dto.responseDTO.CustomerResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Customer;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
@@ -59,9 +62,18 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerResponseDTO> getAllCustomers() {
-        List<Customer> customers = repository.findAll();
-        return mapper.toResponseDTOList(customers);
+    public PageResponseDTO<CustomerResponseDTO> getAllCustomers(Pageable pageable) {
+        Page<Customer> customers = repository.findAll(pageable);
+        List<CustomerResponseDTO> content = mapper.toResponseDTOList(customers.getContent());
+
+        return new PageResponseDTO<>(
+                content,
+                customers.getNumber(),
+                customers.getSize(),
+                customers.getTotalElements(),
+                customers.getTotalPages(),
+                customers.isFirst(),
+                customers.isLast());
     }
 
     @Override

@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.requestDTO.RoleRequestDTO;
 import com.example.demo.dto.responseDTO.RoleResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Role;
 import com.example.demo.mapper.RoleMapper;
 import com.example.demo.repository.RoleRepository;
@@ -38,9 +41,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleResponseDTO> getAllRoles() {
-        List<Role> roles = repository.findAll();
-        return mapper.toResponseDTOList(roles);
+    public PageResponseDTO<RoleResponseDTO> getAllRoles(Pageable pageable) {
+        Page<Role> roles = repository.findAll(pageable);
+        List<RoleResponseDTO> content = mapper.toResponseDTOList(roles.getContent());
+
+        return new PageResponseDTO<>(
+                content,
+                roles.getNumber(),
+                roles.getSize(),
+                roles.getTotalElements(),
+                roles.getTotalPages(),
+                roles.isFirst(),
+                roles.isLast());
     }
 
     @Override

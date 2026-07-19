@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.service.StaffService;
 
 @RestController
@@ -34,8 +34,8 @@ public class StaffController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StaffResponseDTO>> getAllStaffMembers() {
-        List<StaffResponseDTO> response = service.getAllStaffMembers();
+    public ResponseEntity<PageResponseDTO<StaffResponseDTO>> getAllStaffMembers(Pageable pageable) {
+        PageResponseDTO<StaffResponseDTO> response = service.getAllStaffMembers(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

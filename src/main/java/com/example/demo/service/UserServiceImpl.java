@@ -56,11 +56,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageResponseDTO<UserResponseDTO> getAllUsers(Pageable pageable) {
-
         Page<User> users = repository.findAll(pageable);
-
         List<UserResponseDTO> content = mapper.toResponseDTOList(users.getContent());
-
         return new PageResponseDTO<>(
                 content,
                 users.getNumber(),

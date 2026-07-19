@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Position;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.Staff;
@@ -67,9 +70,18 @@ public class StaffServiceImpl implements StaffService{
     }
 
     @Override
-    public List<StaffResponseDTO> getAllStaffMembers() {
-        List<Staff> staffMembers = repository.findAll();
-        return mapper.toResponseDTOList(staffMembers);
+    public PageResponseDTO<StaffResponseDTO> getAllStaffMembers(Pageable pageable) {
+        Page<Staff> staffMembers = repository.findAll(pageable);
+        List<StaffResponseDTO> content = mapper.toResponseDTOList(staffMembers.getContent());
+        
+        return new PageResponseDTO<>(
+                content,
+                staffMembers.getNumber(),
+                staffMembers.getSize(),
+                staffMembers.getTotalElements(),
+                staffMembers.getTotalPages(),
+                staffMembers.isFirst(),
+                staffMembers.isLast());
     }
 
     @Override
