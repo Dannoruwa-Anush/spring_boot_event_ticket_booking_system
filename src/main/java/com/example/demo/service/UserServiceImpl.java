@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.requestDTO.UserRequestDTO;
 import com.example.demo.dto.responseDTO.UserResponseDTO;
+import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
@@ -52,9 +55,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDTO> getAllUsers() {
-        List<User> users = repository.findAll();
-        return mapper.toResponseDTOList(users);
+    public PageResponseDTO<UserResponseDTO> getAllUsers(Pageable pageable) {
+
+        Page<User> users = repository.findAll(pageable);
+
+        List<UserResponseDTO> content = mapper.toResponseDTOList(users.getContent());
+
+        return new PageResponseDTO<>(
+                content,
+                users.getNumber(),
+                users.getSize(),
+                users.getTotalElements(),
+                users.getTotalPages(),
+                users.isFirst(),
+                users.isLast());
     }
 
     @Override
