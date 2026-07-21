@@ -1,42 +1,38 @@
 package com.example.demo.entity.Base;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
+
+    @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     protected LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     protected LocalDateTime updatedAt;
 
+    @CreatedBy
     @Column(name = "created_by", updatable = false)
     protected String createdBy;
 
+    @LastModifiedBy
     @Column(name = "updated_by")
     protected String updatedBy;
-    
-    @PrePersist // is called before the entity is inserted
-    public void onPrePersist() {
-        ZonedDateTime zonedNowUtc = ZonedDateTime.now(ZoneId.of("UTC")); // Convert to UTC time zone
-        this.createdAt = zonedNowUtc.toLocalDateTime(); // Convert to LocalDateTime for storage
-        this.updatedAt = zonedNowUtc.toLocalDateTime(); // Convert to LocalDateTime for storage
-    }
-
-    @PreUpdate // is called before the entity is updated
-    public void onPreUpdate() {
-        ZonedDateTime zonedNowUtc = ZonedDateTime.now(ZoneId.of("UTC"));// Convert to UTC time zone
-        this.updatedAt = zonedNowUtc.toLocalDateTime(); // Convert to LocalDateTime for storage
-    }
 }
