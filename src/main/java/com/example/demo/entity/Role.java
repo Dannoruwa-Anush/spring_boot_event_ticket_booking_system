@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.demo.config.enums.RoleTypeEnum;
@@ -37,5 +36,5 @@ public class Role extends BaseEntity{
 
     // User (M) : (1) Role
     @OneToMany(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
 }
