@@ -6,61 +6,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.dto.requestDTO.CustomerRequestDTO;
 import com.example.demo.dto.responseDTO.CustomerResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Customer;
-import com.example.demo.entity.Role;
-import com.example.demo.entity.User;
 import com.example.demo.mapper.CustomerMapper;
 import com.example.demo.repository.CustomerRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.UserRepository;
 
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository repository;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final CustomerMapper mapper;
-    private final PasswordEncoder passwordEncoder;
 
     // Logger for auditing purposes
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    public CustomerServiceImpl(CustomerRepository repository, UserRepository userRepository,
-            RoleRepository roleRepository, CustomerMapper mapper, PasswordEncoder passwordEncoder) {
+    public CustomerServiceImpl(CustomerRepository repository, CustomerMapper mapper) {
         this.repository = repository;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.mapper = mapper;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO) {
-        Role role = roleRepository.findByName(RoleTypeEnum.CUSTOMER)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-
-        // Create a user
-        User user = new User();
-        user.setName(customerRequestDTO.getUser().getName());
-        user.setEmail(customerRequestDTO.getUser().getEmail());
-        user.setPassword(passwordEncoder.encode(customerRequestDTO.getUser().getPassword()));
-        user.setRole(role);
-        user = userRepository.save(user);
-
-        // Create a customer
-        Customer customer = mapper.toEntty(customerRequestDTO);
-        customer.setUser(user);
-        customer = repository.save(customer);
-
-        return mapper.toResponseDTO(customer);
-    }
-
+    
     @Override
     public PageResponseDTO<CustomerResponseDTO> getAllCustomers(Pageable pageable) {
         Page<Customer> customers = repository.findAll(pageable);

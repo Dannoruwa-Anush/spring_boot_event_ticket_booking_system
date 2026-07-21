@@ -7,7 +7,7 @@ import com.example.demo.dto.responseDTO.CustomerResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 
 public interface CustomerService {
-    CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO);
+    // Create will be handled in Auth
     PageResponseDTO<CustomerResponseDTO> getAllCustomers(Pageable pageable);
     CustomerResponseDTO getCustomerById(Long id);
     CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO customerRequestDTO);
