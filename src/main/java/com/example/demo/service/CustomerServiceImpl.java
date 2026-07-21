@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.requestDTO.CustomerRequestDTO;
 import com.example.demo.dto.responseDTO.CustomerResponseDTO;
@@ -14,6 +15,7 @@ import com.example.demo.entity.Customer;
 import com.example.demo.mapper.CustomerMapper;
 import com.example.demo.repository.CustomerRepository;
 
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository repository;

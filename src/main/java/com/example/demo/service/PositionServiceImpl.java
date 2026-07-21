@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.requestDTO.PositionRequestDTO;
 import com.example.demo.dto.responseDTO.PositionResponseDTO;
@@ -14,6 +15,7 @@ import com.example.demo.entity.Position;
 import com.example.demo.mapper.PositionMapper;
 import com.example.demo.repository.PositionRepository;
 
+@Service
 public class PositionServiceImpl implements PositionService {
 
     private final PositionRepository repository;

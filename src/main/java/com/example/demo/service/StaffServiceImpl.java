@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
@@ -22,6 +23,7 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.StaffRepository;
 import com.example.demo.repository.UserRepository;
 
+@Service
 public class StaffServiceImpl implements StaffService{
 
     private final StaffRepository repository;
