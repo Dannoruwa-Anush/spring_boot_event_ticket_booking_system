@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,8 +36,8 @@ import lombok.NoArgsConstructor;
     @Column(nullable = false)
     private String password;
 
-    // User (1) : (1) Role
-    @OneToOne
+    // User (M) : (1) Role
+    @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id") // Owns the foreign key (it has @JoinColumn)
     private Role role;
 

@@ -1,5 +1,8 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.entity.Base.BaseEntity;
 
@@ -10,7 +13,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +35,7 @@ public class Role extends BaseEntity{
     @Column(nullable = false, unique = true)
     private RoleTypeEnum name;
 
-    // User (1) : (1) Role
-    @OneToOne(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")
-    private User user;
+    // User (M) : (1) Role
+    @OneToMany(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")
+    private List<User> users = new ArrayList<>();
 }
