@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.time.LocalDate;
+
 import com.example.demo.entity.Base.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -30,7 +32,7 @@ public class Customer extends BaseEntity{
     private String address;
 
     @Column(nullable = false)
-    private String date_of_birth;
+    private LocalDate date_of_birth;
 
     @Column(nullable = false)
     private String phoneNo;

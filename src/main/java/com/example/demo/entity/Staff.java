@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.example.demo.config.enums.StaffEmploymentStatusEnum;
 import com.example.demo.entity.Base.BaseEntity;
@@ -43,10 +43,10 @@ public class Staff extends BaseEntity {
     private String phoneNo;
 
     @Column(nullable = false)
-    private LocalDateTime hire_date;
+    private LocalDate hire_date;
 
     @Column(nullable = true)
-    private LocalDateTime termination_date;
+    private LocalDate termination_date;
 
     @Enumerated(EnumType.STRING)
     private StaffEmploymentStatusEnum employmentStatus;

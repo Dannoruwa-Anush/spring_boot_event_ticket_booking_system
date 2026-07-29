@@ -1,5 +1,7 @@
 package com.example.demo.dto.responseDTO;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class CustomerResponseDTO {
     private long id;
     private String address;
-    private String date_of_birth;
+    private LocalDate date_of_birth;
     private String phoneNo;
 
     private UserResponseDTO user;

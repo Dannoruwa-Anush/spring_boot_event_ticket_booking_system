@@ -36,6 +36,9 @@ import lombok.NoArgsConstructor;
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private boolean systemAccount = false;
+
     // User (M) : (1) Role
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id") // Owns the foreign key (it has @JoinColumn)
