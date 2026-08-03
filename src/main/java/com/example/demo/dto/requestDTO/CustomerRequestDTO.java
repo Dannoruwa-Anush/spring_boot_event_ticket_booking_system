@@ -13,5 +13,5 @@ public class CustomerRequestDTO {
     private String address;
     private LocalDate date_of_birth;
     private String phoneNo;
-    private UserRegisterRequestDTO user;
+    private CustomerUserRegisterRequestDTO user;
 }

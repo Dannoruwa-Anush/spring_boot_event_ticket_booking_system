@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.config.enums.RoleTypeEnum;
+import com.example.demo.config.enums.StaffEmploymentStatusEnum;
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
@@ -24,7 +25,7 @@ import com.example.demo.repository.StaffRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
-public class StaffServiceImpl implements StaffService{
+public class StaffServiceImpl implements StaffService {
 
     private final StaffRepository repository;
     private final UserRepository userRepository;
@@ -36,7 +37,8 @@ public class StaffServiceImpl implements StaffService{
     // Logger for auditing purposes
     private static final Logger logger = LoggerFactory.getLogger(StaffServiceImpl.class);
 
-    public StaffServiceImpl(StaffRepository repository, UserRepository userRepository, RoleRepository roleRepository, PositionRepository positionRepository, StaffMapper mapper, PasswordEncoder passwordEncoder){
+    public StaffServiceImpl(StaffRepository repository, UserRepository userRepository, RoleRepository roleRepository,
+            PositionRepository positionRepository, StaffMapper mapper, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -52,20 +54,32 @@ public class StaffServiceImpl implements StaffService{
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         Position position = positionRepository.findById(staffRequestDTO.getPositionId())
-                .orElseThrow(() -> new RuntimeException("Postion not found"));        
+                .orElseThrow(() -> new RuntimeException("Postion not found"));
 
         // Create a user
         User user = new User();
         user.setName(staffRequestDTO.getUser().getName());
         user.setEmail(staffRequestDTO.getUser().getEmail());
-        user.setPassword(passwordEncoder.encode(staffRequestDTO.getUser().getPassword()));
+        user.setPassword(passwordEncoder.encode("ChangeMe321!"));
         user.setRole(role);
         user = userRepository.save(user);
 
         // Create a staff
         Staff staff = mapper.toEntity(staffRequestDTO);
+        staff.setNic(staffRequestDTO.getNic());
+        staff.setPhoneNo(staffRequestDTO.getPhoneNo());
+        staff.setHire_date(staffRequestDTO.getHire_date());
+        staff.setEmploymentStatus(StaffEmploymentStatusEnum.ACTIVE);
         staff.setUser(user);
         staff.setPosition(position);
+
+        // First save to generate ID
+        staff = repository.save(staff);
+
+        // Generate employee number
+        staff.setEmployeeNo(String.format("emp%03d", staff.getId()));
+
+        // Save again
         staff = repository.save(staff);
 
         return mapper.toResponseDTO(staff);
@@ -75,7 +89,7 @@ public class StaffServiceImpl implements StaffService{
     public PageResponseDTO<StaffResponseDTO> getAllStaffMembers(Pageable pageable) {
         Page<Staff> staffMembers = repository.findAll(pageable);
         List<StaffResponseDTO> content = mapper.toResponseDTOList(staffMembers.getContent());
-        
+
         return new PageResponseDTO<>(
                 content,
                 staffMembers.getNumber(),
@@ -88,10 +102,10 @@ public class StaffServiceImpl implements StaffService{
 
     @Override
     public StaffResponseDTO getStaffById(Long id) {
-      Staff staffMember = repository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Staff not found"));
+        Staff staffMember = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Staff not found"));
 
-      return mapper.toResponseDTO(staffMember);
+        return mapper.toResponseDTO(staffMember);
     }
 
     @Override
@@ -117,5 +131,5 @@ public class StaffServiceImpl implements StaffService{
         repository.deleteById(id);
 
         logger.info("Staff deleted successfully. ID: {}", id);
-    } 
+    }
 }
