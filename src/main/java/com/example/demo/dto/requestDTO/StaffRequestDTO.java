@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class StaffRequestDTO {
-    private String employeeNo; 
     private String nic;
     private String phoneNo;
     private LocalDate hire_date;
 
-    private StaffUserRegisterRequestDTO user;
     private long positionId;
+    private StaffUserRegisterRequestDTO user;
 }
