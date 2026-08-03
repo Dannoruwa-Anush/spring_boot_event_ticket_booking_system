@@ -13,5 +13,4 @@ public interface CustomerService {
     PageResponseDTO<CustomerResponseDTO> getAllCustomers(Pageable pageable);
     CustomerResponseDTO getCustomerById(Long id);
     CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO customerRequestDTO);
-    void deleteCustomer(Long id);
 }

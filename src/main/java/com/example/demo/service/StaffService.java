@@ -13,5 +13,4 @@ public interface StaffService {
     PageResponseDTO<StaffResponseDTO> getAllStaffMembers(Pageable pageable);
     StaffResponseDTO getStaffById(Long id);
     StaffResponseDTO updateStaff(Long id, StaffRequestDTO staffRequestDTO);
-    void deleteStaff(Long id);
 }

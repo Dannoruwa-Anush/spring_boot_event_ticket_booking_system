@@ -66,15 +66,4 @@ public class CustomerServiceImpl implements CustomerService {
 
         return mapper.toResponseDTO(updated);
     }
-
-    @Override
-    public void deleteCustomer(Long id) {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Customer is not found with id: " + id);
-        }
-
-        repository.deleteById(id);
-
-        logger.info("Customer deleted successfully. ID: {}", id);
-    }
 }

@@ -128,15 +128,4 @@ public class StaffServiceImpl implements StaffService {
 
         return mapper.toResponseDTO(updated);
     }
-
-    @Override
-    public void deleteStaff(Long id) {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Staff is not found with id: " + id);
-        }
-
-        repository.deleteById(id);
-
-        logger.info("Staff deleted successfully. ID: {}", id);
-    }
 }

@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,11 +41,5 @@ public class CustomerController {
     public ResponseEntity<CustomerResponseDTO> updateCustomer(@PathVariable Long id, @RequestBody CustomerRequestDTO dto) {
         CustomerResponseDTO response = service.updateCustomer(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-        service.deleteCustomer(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
