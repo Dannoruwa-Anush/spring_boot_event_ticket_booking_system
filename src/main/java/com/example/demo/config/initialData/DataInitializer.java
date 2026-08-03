@@ -42,6 +42,20 @@ public class DataInitializer {
                         return roleRepository.save(role);
                     });
 
+            roleRepository.findByName(RoleTypeEnum.STAFF)
+                    .orElseGet(() -> {
+                        Role role = new Role();
+                        role.setName(RoleTypeEnum.STAFF);
+                        return roleRepository.save(role);
+                    });   
+            
+                roleRepository.findByName(RoleTypeEnum.CUSTOMER)
+                    .orElseGet(() -> {
+                        Role role = new Role();
+                        role.setName(RoleTypeEnum.CUSTOMER);
+                        return roleRepository.save(role);
+                    });   
+
             // Step 2: Create system account
             userRepository.findFirstBySystemAccountTrue()
                     .orElseGet(() -> {
