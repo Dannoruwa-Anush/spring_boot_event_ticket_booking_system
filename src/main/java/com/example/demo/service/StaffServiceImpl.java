@@ -49,23 +49,37 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public StaffResponseDTO createStaff(StaffRequestDTO staffRequestDTO) {
+        // Check duplicate email
+        if (userRepository.existsByEmail(staffRequestDTO.getUser().getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
 
+        // Check duplicate NIC
+        if (repository.existsByNic(staffRequestDTO.getNic())) {
+            throw new RuntimeException("NIC already exists");
+        }
+
+        // Get Role
         Role role = roleRepository.findByName(RoleTypeEnum.STAFF)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
+        // Get Position
         Position position = positionRepository.findById(staffRequestDTO.getPositionId())
-                .orElseThrow(() -> new RuntimeException("Postion not found"));
+                .orElseThrow(() -> new RuntimeException("Position not found"));
 
-        // Create a user
+        // Create User
         User user = new User();
         user.setName(staffRequestDTO.getUser().getName());
         user.setEmail(staffRequestDTO.getUser().getEmail());
         user.setPassword(passwordEncoder.encode("ChangeMe321!"));
         user.setRole(role);
+
         user = userRepository.save(user);
 
-        // Create a staff
+        // Create Staff
         Staff staff = mapper.toEntity(staffRequestDTO);
+
+        staff.setEmployeeNo("EMP" + String.format("%06d", (int) (Math.random() * 1_000_000)));
         staff.setNic(staffRequestDTO.getNic());
         staff.setPhoneNo(staffRequestDTO.getPhoneNo());
         staff.setHire_date(staffRequestDTO.getHire_date());
@@ -73,13 +87,6 @@ public class StaffServiceImpl implements StaffService {
         staff.setUser(user);
         staff.setPosition(position);
 
-        // First save to generate ID
-        staff = repository.save(staff);
-
-        // Generate employee number
-        staff.setEmployeeNo(String.format("emp%03d", staff.getId()));
-
-        // Save again
         staff = repository.save(staff);
 
         return mapper.toResponseDTO(staff);

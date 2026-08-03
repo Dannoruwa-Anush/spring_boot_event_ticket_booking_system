@@ -25,6 +25,8 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.security.CustomUserDetailsImpl;
 import com.example.demo.security.jwt.JwtUtils;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -82,6 +84,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public CustomerResponseDTO registerCustomer(CustomerRequestDTO customerRequestDTO) {
         Role role = roleRepository.findByName(RoleTypeEnum.CUSTOMER)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
