@@ -40,12 +40,12 @@ public class User extends BaseEntity {
 
     // Security Management
     @Column(nullable = false)
-    private boolean mustChangePassword;
+    private boolean mustChangePassword = false;
 
     private LocalDateTime passwordChangedAt;
 
-    @Column(nullable = true)
-    private int failedLoginAttempts;
+    @Column(nullable = false)
+    private int failedLoginAttempts = 0;
 
     @Column(nullable = true)
     private LocalDateTime accountLockedUntil;
