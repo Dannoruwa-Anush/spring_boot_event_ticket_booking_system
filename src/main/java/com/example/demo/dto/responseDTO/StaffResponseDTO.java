@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class StaffResponseDTO {
-    private long id;
+    private Long id;
     private String employeeNo; 
     private String nic;
     private String phoneNo;

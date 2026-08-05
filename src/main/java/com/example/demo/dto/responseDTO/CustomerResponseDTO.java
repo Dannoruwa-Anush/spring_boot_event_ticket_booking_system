@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CustomerResponseDTO {
-    private long id;
+    private Long id;
     private String address;
     private LocalDate date_of_birth;
     private String phoneNo;

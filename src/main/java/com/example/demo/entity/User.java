@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
  public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -45,6 +45,12 @@ import lombok.NoArgsConstructor;
 
     @LastModifiedDate
     private LocalDateTime passwordChangedAt;
+
+    @Column(nullable = true)
+    private int failedLoginAttempts;
+
+    @Column(nullable = true)
+    private LocalDateTime accountLockedUntil;
 
     @Column(nullable = false)
     private boolean systemAccount = false;

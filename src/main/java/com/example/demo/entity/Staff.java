@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 public class Staff extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String employeeNo; // Format emp**** - *** auto assign

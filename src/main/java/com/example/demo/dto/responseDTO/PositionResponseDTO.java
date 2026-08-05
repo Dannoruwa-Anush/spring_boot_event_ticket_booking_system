@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class PositionResponseDTO {
-    private long id;
+    private Long id;
     private String name;
 }
