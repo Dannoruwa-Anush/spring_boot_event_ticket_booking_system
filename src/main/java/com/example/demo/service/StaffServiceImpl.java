@@ -121,7 +121,34 @@ public class StaffServiceImpl implements StaffService {
         Staff staff = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
 
+        // Check duplicate email (exclude current user)
+        if (userRepository.existsByEmailAndIdNot(
+                staffRequestDTO.getUser().getEmail(),
+                staff.getUser().getId())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        // Check duplicate NIC (exclude current staff)
+        if (repository.existsByNicAndIdNot(
+                staffRequestDTO.getNic(),
+                staff.getId())) {
+            throw new RuntimeException("NIC already exists");
+        }
+
+        // Get Position
+        Position position = positionRepository.findById(staffRequestDTO.getPositionId())
+                .orElseThrow(() -> new RuntimeException("Position not found"));
+
+        // Update Staff fields
         mapper.updateStaffFromDTO(staffRequestDTO, staff);
+        staff.setPosition(position);
+
+        // Update User fields
+        User user = staff.getUser();
+        user.setName(staffRequestDTO.getUser().getName());
+        user.setEmail(staffRequestDTO.getUser().getEmail());
+
+        userRepository.save(user);
 
         Staff updated = repository.save(staff);
 
@@ -133,13 +160,14 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public StaffResponseDTO UpdateStaffEmploymentStatus(Long id,
             UpdateStaffEmploymentStatusRequestDTO staffStatusRequestDTO) {
-        
+
         Staff staff = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
 
         // Only ACTIVE staff can have their status changed
         if (staff.getEmploymentStatus() != StaffEmploymentStatusEnum.ACTIVE) {
-            throw new IllegalStateException("Employment status cannot be changed. Current status is " + staff.getEmploymentStatus());
+            throw new IllegalStateException(
+                    "Employment status cannot be changed. Current status is " + staff.getEmploymentStatus());
         }
 
         // ACTIVE can only become RESIGNED, TERMINATED or RETIRED
