@@ -14,6 +14,8 @@ import com.example.demo.entity.User;
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "mustChangePassword", ignore = true)
+    @Mapping(target = "passwordChangedAt", ignore = true)
     @Mapping(target = "systemAccount", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
@@ -30,6 +32,8 @@ public interface UserMapper {
     
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "systemAccount", ignore = true)
+    @Mapping(target = "mustChangePassword", ignore = true)
+    @Mapping(target = "passwordChangedAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
