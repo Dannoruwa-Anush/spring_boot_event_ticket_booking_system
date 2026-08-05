@@ -85,4 +85,9 @@ public class User extends BaseEntity {
         this.passwordChangedAt = LocalDateTime.now();
         this.mustChangePassword = false;
     }
+
+    public void unlockAccount() {
+        this.accountLockedUntil = null;
+        this.failedLoginAttempts = 0;
+    }
 }
