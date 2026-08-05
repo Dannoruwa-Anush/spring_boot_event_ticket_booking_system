@@ -26,8 +26,12 @@ CREATE TABLE users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    mustChangePassword BOOLEAN NOT NULL DEFAULT FALSE,
-    passwordChangedAt DATETIME NOT NULL,
+
+    -- Security Management
+    must_change_password BOOLEAN NOT NULL DEFAULT FALSE,
+    password_changed_at DATETIME NULL,
+    failed_login_attempts INT NOT NULL DEFAULT 0,
+    account_locked_until DATETIME NULL,
     system_account BOOLEAN NOT NULL DEFAULT FALSE,
 
     role_id BIGINT NOT NULL,

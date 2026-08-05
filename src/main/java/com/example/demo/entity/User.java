@@ -2,8 +2,6 @@ package com.example.demo.entity;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.LastModifiedDate;
-
 import com.example.demo.entity.Base.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -26,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data // getters & setters
 @EqualsAndHashCode(callSuper = false)
- public class User extends BaseEntity{
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,16 +32,16 @@ import lombok.NoArgsConstructor;
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
+    // Security Management
     @Column(nullable = false)
     private boolean mustChangePassword;
 
-    @LastModifiedDate
     private LocalDateTime passwordChangedAt;
 
     @Column(nullable = true)
@@ -67,4 +65,24 @@ import lombok.NoArgsConstructor;
     // User (1) : (1) Customer
     @OneToOne(mappedBy = "user")
     private Customer customer;
+
+    // Helper Methods
+    public void increaseFailedLoginAttempts() {
+        this.failedLoginAttempts++;
+    }
+
+    public void resetFailedLoginAttempts() {
+        this.failedLoginAttempts = 0;
+    }
+
+    public boolean isAccountLocked() {
+        return accountLockedUntil != null
+                && accountLockedUntil.isAfter(LocalDateTime.now());
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+        this.passwordChangedAt = LocalDateTime.now();
+        this.mustChangePassword = false;
+    }
 }
