@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.dto.requestDTO.CustomerRequestDTO;
+import com.example.demo.dto.requestDTO.ForgotPasswordRequestDTO;
 import com.example.demo.dto.requestDTO.LoginRequestDTO;
+import com.example.demo.dto.requestDTO.ResetPasswordRequestDTO;
 import com.example.demo.dto.responseDTO.CustomerResponseDTO;
 import com.example.demo.dto.responseDTO.LoginResponseDTO;
 import com.example.demo.entity.Customer;
@@ -39,11 +43,12 @@ public class AuthServiceImpl implements AuthService {
     private final CustomerMapper customerMapper;
     private final PasswordEncoder passwordEncoder;
 
-
     // Logger for auditing purposes
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthMapper authMapper, CustomerRepository customerRepository, UserRepository userRepository, RoleRepository roleRepository, CustomerMapper customerMapper, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthMapper authMapper,
+            CustomerRepository customerRepository, UserRepository userRepository, RoleRepository roleRepository,
+            CustomerMapper customerMapper, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.authMapper = authMapper;
@@ -57,21 +62,31 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
 
-         try {
+        try {
 
-            Authentication authentication =
-                    authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    loginRequestDTO.getEmail(),
-                                    loginRequestDTO.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequestDTO.getEmail(),
+                            loginRequestDTO.getPassword()));
 
             CustomUserDetailsImpl userDetails = (CustomUserDetailsImpl) authentication.getPrincipal();
 
             User user = userDetails.getUser();
 
-            String token = jwtUtils.generateToken(userDetails);
-
             logger.info("User logged in successfully. User ID: {}, Email: {}", user.getId(), user.getEmail());
+
+            // Force password change for first login
+            if (user.isMustChangePassword()) {
+
+                String passwordChangeToken = jwtUtils.generatePasswordChangeToken(userDetails);
+
+                return authMapper.toPasswordChangeRequiredResponse(
+                        passwordChangeToken,
+                        user);
+            }
+
+            // Normal login
+            String token = jwtUtils.generateToken(userDetails);
 
             return authMapper.toLoginResponse(token, user);
 
@@ -105,4 +120,43 @@ public class AuthServiceImpl implements AuthService {
         return customerMapper.toResponseDTO(customer);
     }
 
+    @Override
+    public void forgotPassword(ForgotPasswordRequestDTO dto) {
+        User user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = jwtUtils.generatePasswordResetToken(
+                new CustomUserDetailsImpl(user));
+
+        // Send email with reset link
+
+        logger.info(
+                "Password reset requested for {}",
+                user.getEmail());
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequestDTO dto) {
+        if (!jwtUtils.isPasswordResetToken(dto.getToken())) {
+            throw new RuntimeException(
+                    "Invalid or expired reset token");
+        }
+
+        String email = jwtUtils.extractUsername(dto.getToken());
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(
+                passwordEncoder.encode(dto.getNewPassword()));
+
+        user.setMustChangePassword(false);
+
+        user.setPasswordChangedAt(
+                LocalDateTime.now());
+
+        userRepository.save(user);
+
+        logger.info("Password reset completed for {}", user.getEmail());
+    }
 }

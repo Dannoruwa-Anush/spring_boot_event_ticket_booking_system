@@ -79,6 +79,7 @@ public class DataInitializer {
                         adminUser.setName("System Admin");
                         adminUser.setEmail("admin@example.com");
                         adminUser.setPassword(passwordEncoder.encode("ChangeMe123!"));
+                        adminUser.setMustChangePassword(true);
                         adminUser.setRole(adminRole);
 
                         return userRepository.save(adminUser);

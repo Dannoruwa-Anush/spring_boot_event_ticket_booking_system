@@ -73,6 +73,7 @@ public class StaffServiceImpl implements StaffService {
         user.setName(staffRequestDTO.getUser().getName());
         user.setEmail(staffRequestDTO.getUser().getEmail());
         user.setPassword(passwordEncoder.encode("ChangeMe321!"));
+        user.setMustChangePassword(true);
         user.setRole(role);
 
         user = userRepository.save(user);

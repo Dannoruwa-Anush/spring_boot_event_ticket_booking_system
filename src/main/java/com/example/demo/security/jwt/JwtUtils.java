@@ -15,12 +15,15 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtils {
-    
+
     @Value("${jwt.secret}") // gets value of variable defined in the resources/application.properties
     private String jwtSecret;
 
     @Value("${jwt.expiration}") // gets value of variable defined in the resources/application.properties
     private long jwtExpirationMs;
+
+    // Password change token expiry (10 minutes)
+    private static final long PASSWORD_CHANGE_TOKEN_EXPIRATION = 10 * 60 * 1000;
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -32,6 +35,29 @@ public class JwtUtils {
                 .subject(user.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public String generatePasswordChangeToken(UserDetails user) {
+
+        return Jwts.builder()
+                .subject(user.getUsername())
+                .claim("type", "PASSWORD_CHANGE")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + PASSWORD_CHANGE_TOKEN_EXPIRATION))
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public String generatePasswordResetToken(UserDetails user) {
+
+        return Jwts.builder()
+                .subject(user.getUsername())
+                .claim("type", "PASSWORD_RESET")
+                .issuedAt(new Date())
+                .expiration(
+                        new Date(System.currentTimeMillis() + 15 * 60 * 1000))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
@@ -50,6 +76,11 @@ public class JwtUtils {
         return extractClaims(token).getSubject();
     }
 
+    public String extractTokenType(String token) {
+
+        return extractClaims(token).get("type", String.class);
+    }
+
     private Date extractExpiration(String token) {
 
         return extractClaims(token).getExpiration();
@@ -63,8 +94,25 @@ public class JwtUtils {
                 && !isTokenExpired(token);
     }
 
+    public boolean isPasswordChangeToken(String token) {
+
+        String type = extractTokenType(token);
+
+        return "PASSWORD_CHANGE".equals(type)
+                && !isTokenExpired(token);
+    }
+
+    public boolean isPasswordResetToken(String token) {
+
+        String type = extractClaims(token)
+                .get("type", String.class);
+
+        return "PASSWORD_RESET".equals(type)
+                && !isTokenExpired(token);
+    }
+
     private boolean isTokenExpired(String token) {
 
         return extractExpiration(token).before(new Date());
-    }    
+    }
 }

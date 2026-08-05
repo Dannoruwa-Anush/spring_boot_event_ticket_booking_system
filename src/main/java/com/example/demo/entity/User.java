@@ -1,5 +1,9 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.LastModifiedDate;
+
 import com.example.demo.entity.Base.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -35,6 +39,12 @@ import lombok.NoArgsConstructor;
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private boolean mustChangePassword;
+
+    @LastModifiedDate
+    private LocalDateTime passwordChangedAt;
 
     @Column(nullable = false)
     private boolean systemAccount = false;
