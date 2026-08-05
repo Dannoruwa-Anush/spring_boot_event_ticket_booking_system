@@ -12,24 +12,27 @@ import com.example.demo.dto.requestDTO.CustomerRequestDTO;
 import com.example.demo.dto.responseDTO.CustomerResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Customer;
+import com.example.demo.entity.User;
 import com.example.demo.mapper.CustomerMapper;
 import com.example.demo.repository.CustomerRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository repository;
+    private final UserRepository userRepository;
     private final CustomerMapper mapper;
 
     // Logger for auditing purposes
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    public CustomerServiceImpl(CustomerRepository repository, CustomerMapper mapper) {
+    public CustomerServiceImpl(CustomerRepository repository, UserRepository userRepository, CustomerMapper mapper) {
         this.repository = repository;
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
-    
     @Override
     public PageResponseDTO<CustomerResponseDTO> getAllCustomers(Pageable pageable) {
         Page<Customer> customers = repository.findAll(pageable);
@@ -58,7 +61,22 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
+        // Check duplicate email (exclude current user)
+        if (userRepository.existsByEmailAndIdNot(
+                customerRequestDTO.getUser().getEmail(),
+                customer.getUser().getId())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        // Update customer fields
         mapper.updateCustomerFromDto(customerRequestDTO, customer);
+
+        // Update user fields (password is NOT updated)
+        User user = customer.getUser();
+        user.setName(customerRequestDTO.getUser().getName());
+        user.setEmail(customerRequestDTO.getUser().getEmail());
+
+        userRepository.save(user);
 
         Customer updated = repository.save(customer);
 
