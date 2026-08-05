@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
+import com.example.demo.dto.requestDTO.patchRequestDTO.UpdateStaffEmploymentStatusRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 
@@ -13,4 +14,5 @@ public interface StaffService {
     PageResponseDTO<StaffResponseDTO> getAllStaffMembers(Pageable pageable);
     StaffResponseDTO getStaffById(Long id);
     StaffResponseDTO updateStaff(Long id, StaffRequestDTO staffRequestDTO);
+    StaffResponseDTO UpdateStaffEmploymentStatus(Long id, UpdateStaffEmploymentStatusRequestDTO staffStatusRequestDTO);
 }

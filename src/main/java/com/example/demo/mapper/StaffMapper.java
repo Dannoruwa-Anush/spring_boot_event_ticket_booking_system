@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
+import com.example.demo.dto.requestDTO.patchRequestDTO.UpdateStaffEmploymentStatusRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
 import com.example.demo.entity.Staff;
 
@@ -18,6 +19,7 @@ public interface StaffMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "employeeNo", ignore = true)
     @Mapping(target = "termination_date", ignore = true)
     @Mapping(target = "employmentStatus", ignore = true)
     @Mapping(target = "user", ignore = true)
@@ -32,9 +34,23 @@ public interface StaffMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "employeeNo", ignore = true)
     @Mapping(target = "termination_date", ignore = true)
     @Mapping(target = "employmentStatus", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "position", ignore = true)
     void updateStaffFromDTO(StaffRequestDTO dto, @MappingTarget Staff staff);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "employeeNo", ignore = true)
+    @Mapping(target = "nic", ignore = true)
+    @Mapping(target = "phoneNo", ignore = true)
+    @Mapping(target = "hire_date", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "position", ignore = true)
+    void updateEmploymentStatusFromDTO(UpdateStaffEmploymentStatusRequestDTO dto, @MappingTarget Staff staff);
 }

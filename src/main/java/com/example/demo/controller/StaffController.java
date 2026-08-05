@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
+import com.example.demo.dto.requestDTO.patchRequestDTO.UpdateStaffEmploymentStatusRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.service.StaffService;
@@ -47,6 +48,12 @@ public class StaffController {
     @PutMapping("/{id}")
     public ResponseEntity<StaffResponseDTO> updateStaff(@PathVariable Long id, @RequestBody StaffRequestDTO dto) {
         StaffResponseDTO response = service.updateStaff(id, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/{id}/employment-status")
+    public ResponseEntity<StaffResponseDTO> updateStaffEmploymentStatus(@PathVariable Long id, @RequestBody UpdateStaffEmploymentStatusRequestDTO dto) {
+        StaffResponseDTO response = service.UpdateStaffEmploymentStatus(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

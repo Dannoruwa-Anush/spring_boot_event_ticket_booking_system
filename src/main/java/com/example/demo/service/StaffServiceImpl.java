@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.config.enums.StaffEmploymentStatusEnum;
 import com.example.demo.dto.requestDTO.StaffRequestDTO;
+import com.example.demo.dto.requestDTO.patchRequestDTO.UpdateStaffEmploymentStatusRequestDTO;
 import com.example.demo.dto.responseDTO.StaffResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Position;
@@ -127,5 +128,43 @@ public class StaffServiceImpl implements StaffService {
         logger.info("Staff updated successfully. ID: {}", updated.getId());
 
         return mapper.toResponseDTO(updated);
+    }
+
+    @Override
+    public StaffResponseDTO UpdateStaffEmploymentStatus(Long id,
+            UpdateStaffEmploymentStatusRequestDTO staffStatusRequestDTO) {
+        
+        Staff staff = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
+
+        // Only ACTIVE staff can have their status changed
+        if (staff.getEmploymentStatus() != StaffEmploymentStatusEnum.ACTIVE) {
+            throw new IllegalStateException("Employment status cannot be changed. Current status is " + staff.getEmploymentStatus());
+        }
+
+        // ACTIVE can only become RESIGNED, TERMINATED or RETIRED
+        StaffEmploymentStatusEnum newStatus = staffStatusRequestDTO.getEmploymentStatus();
+
+        if (newStatus == StaffEmploymentStatusEnum.ACTIVE) {
+            throw new IllegalArgumentException(
+                    "ACTIVE staff cannot be updated to ACTIVE.");
+        }
+
+        if (newStatus != StaffEmploymentStatusEnum.RESIGNED
+                && newStatus != StaffEmploymentStatusEnum.TERMINATED
+                && newStatus != StaffEmploymentStatusEnum.RETIRED) {
+            throw new IllegalArgumentException("Invalid employment status.");
+        }
+
+        if (staffStatusRequestDTO.getTermination_date() == null) {
+            throw new IllegalArgumentException(
+                    "Termination date is required when ending employment.");
+        }
+
+        mapper.updateEmploymentStatusFromDTO(staffStatusRequestDTO, staff);
+
+        Staff updatedStaff = repository.save(staff);
+
+        return mapper.toResponseDTO(updatedStaff);
     }
 }
