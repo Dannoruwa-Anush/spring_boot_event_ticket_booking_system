@@ -25,14 +25,18 @@ import com.example.demo.dto.responseDTO.LoginResponseDTO;
 import com.example.demo.entity.Customer;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.entity.securityEntity.PasswordResetToken;
 import com.example.demo.mapper.AuthMapper;
 import com.example.demo.mapper.CustomerMapper;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.securityRepository.PasswordResetTokenRepository;
 import com.example.demo.security.CustomUserDetailsImpl;
 import com.example.demo.security.jwt.JwtUtils;
+import com.example.demo.service.rateLimitService.RateLimitService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -46,6 +50,8 @@ public class AuthServiceImpl implements AuthService {
         private final RoleRepository roleRepository;
         private final CustomerMapper customerMapper;
         private final PasswordEncoder passwordEncoder;
+        private final RateLimitService rateLimitService;
+        private final PasswordResetTokenRepository resetTokenRepository;
 
         // Logger for auditing purposes
         private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
@@ -53,7 +59,8 @@ public class AuthServiceImpl implements AuthService {
         public AuthServiceImpl(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthMapper authMapper,
                         CustomerRepository customerRepository, UserRepository userRepository,
                         RoleRepository roleRepository,
-                        CustomerMapper customerMapper, PasswordEncoder passwordEncoder) {
+                        CustomerMapper customerMapper, PasswordEncoder passwordEncoder,
+                        RateLimitService rateLimitService, PasswordResetTokenRepository resetTokenRepository) {
                 this.authenticationManager = authenticationManager;
                 this.jwtUtils = jwtUtils;
                 this.authMapper = authMapper;
@@ -62,6 +69,8 @@ public class AuthServiceImpl implements AuthService {
                 this.roleRepository = roleRepository;
                 this.customerMapper = customerMapper;
                 this.passwordEncoder = passwordEncoder;
+                this.rateLimitService = rateLimitService;
+                this.resetTokenRepository = resetTokenRepository;
         }
 
         @Override
@@ -159,13 +168,31 @@ public class AuthServiceImpl implements AuthService {
         }
 
         @Override
-        public void forgotPassword(ForgotPasswordRequestDTO dto) {
+        @Transactional
+        public void forgotPassword(ForgotPasswordRequestDTO dto, HttpServletRequest request) {
+
+                String ip = request.getRemoteAddr();
+
+                // IP protection
+                if (!rateLimitService.allowRequest("forgot-ip:" + ip)) {
+                        throw new RuntimeException("Too many requests. Try again later.");
+                }
+
+                // Email protection
+                if (!rateLimitService.allowRequest("forgot-email:" + dto.getEmail())) {
+                        throw new RuntimeException("Too many requests. Try again later.");
+                }
 
                 userRepository.findByEmail(dto.getEmail())
                                 .ifPresent(user -> {
 
-                                        String token = jwtUtils.generatePasswordResetToken(
-                                                        new CustomUserDetailsImpl(user));
+                                        String token = jwtUtils.generatePasswordResetToken(new CustomUserDetailsImpl(user));
+
+                                        PasswordResetToken resetToken = new PasswordResetToken();
+                                        resetToken.setUser(user);
+                                        resetToken.setTokenHash(passwordEncoder.encode(token));
+                                        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+                                        resetTokenRepository.save(resetToken);
 
                                         // send email here
 

@@ -50,6 +50,30 @@ CREATE TABLE users (
         ON DELETE RESTRICT
 );
 
+-- PASSWORD RESET TOKENS TB
+CREATE TABLE password_reset_tokens (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    token_hash VARCHAR(255) NOT NULL,
+    expiry_date DATETIME NOT NULL,
+    used BOOLEAN NOT NULL DEFAULT FALSE,
+
+    user_id BIGINT NOT NULL,
+
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    created_by BIGINT NULL,
+    updated_by BIGINT NULL,
+
+    CONSTRAINT uq_password_reset_tokens_token_hash
+        UNIQUE (token_hash),
+
+    CONSTRAINT fk_password_reset_tokens_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
 -- POSITIONS TB
 CREATE TABLE positions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -152,6 +176,21 @@ ON DELETE RESTRICT;
 
 ALTER TABLE users
 ADD CONSTRAINT fk_users_updated_by
+FOREIGN KEY (updated_by)
+REFERENCES users(id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+-- Password Reset Token
+ALTER TABLE password_reset_tokens
+ADD CONSTRAINT fk_password_reset_tokens_created_by
+FOREIGN KEY (created_by)
+REFERENCES users(id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+ALTER TABLE password_reset_tokens
+ADD CONSTRAINT fk_password_reset_tokens_updated_by
 FOREIGN KEY (updated_by)
 REFERENCES users(id)
 ON UPDATE CASCADE

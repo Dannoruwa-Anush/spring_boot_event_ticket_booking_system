@@ -9,11 +9,13 @@ import com.example.demo.dto.requestDTO.ResetPasswordRequestDTO;
 import com.example.demo.dto.responseDTO.CustomerResponseDTO;
 import com.example.demo.dto.responseDTO.LoginResponseDTO;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public interface AuthService {
     LoginResponseDTO login(LoginRequestDTO loginRequestDTO);
     CustomerResponseDTO registerCustomer(CustomerRequestDTO customerRequestDTO);
-    void forgotPassword(ForgotPasswordRequestDTO dto);
+    void forgotPassword(ForgotPasswordRequestDTO dto, HttpServletRequest request);
     void resetPassword(ResetPasswordRequestDTO dto);
     LoginResponseDTO changePassword(ResetPasswordRequestDTO dto);
 }

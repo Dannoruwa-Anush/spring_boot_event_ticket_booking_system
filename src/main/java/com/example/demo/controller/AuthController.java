@@ -15,6 +15,8 @@ import com.example.demo.dto.responseDTO.CustomerResponseDTO;
 import com.example.demo.dto.responseDTO.LoginResponseDTO;
 import com.example.demo.service.AuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -38,9 +40,9 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequestDTO dto) {
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequestDTO dto, HttpServletRequest request) {
 
-        service.forgotPassword(dto);
+        service.forgotPassword(dto, request);
 
         return ResponseEntity.ok("If the account exists, a reset link has been sent.");
     }

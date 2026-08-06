@@ -106,6 +106,14 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- [End] Spring Security + JWT dependency  -->
+
+		<!-- [Start] bucket4j dependency: rate limiting dependency  -->
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>8.10.1</version>
+		</dependency>
+		<!-- [End] bucket4j: rate limiting dependency -->
 	</dependencies>
 
 	<build>
