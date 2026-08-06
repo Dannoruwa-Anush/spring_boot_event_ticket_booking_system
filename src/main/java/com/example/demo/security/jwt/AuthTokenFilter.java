@@ -45,7 +45,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                    CustomUserDetailsImpl userDetails = (CustomUserDetailsImpl) userDetailsService.loadUserByUsername(username);
+                    CustomUserDetailsImpl userDetails = (CustomUserDetailsImpl) userDetailsService
+                            .loadUserByUsername(username);
 
                     String path = request.getRequestURI();
 
@@ -69,12 +70,24 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                     } else {
 
-                        // Validate normal ACCESS token
-                        if (!jwtUtils.isAccessToken(jwt, userDetails)) {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    "Invalid access token.");
-                            return;
+                        if (path.equals("/auth/reset-password")) {
+
+                            if (!jwtUtils.isPasswordResetToken(jwt, userDetails)) {
+                                response.sendError(
+                                        HttpServletResponse.SC_UNAUTHORIZED,
+                                        "Invalid password reset token.");
+                                return;
+                            }
+
+                        } else {
+                            
+                            // Validate normal ACCESS token
+                            if (!jwtUtils.isAccessToken(jwt, userDetails)) {
+                                response.sendError(
+                                        HttpServletResponse.SC_UNAUTHORIZED,
+                                        "Invalid access token.");
+                                return;
+                            }
                         }
                     }
 

@@ -36,11 +36,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/login",
-                                "/auth/register",
-                                "/auth/forgot-password",
-                                "/auth/reset-password")
+                                "/auth/register-customer",
+                                "/auth/forgot-password")
                         .permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(
+                                "/auth/reset-password",
+                                "/auth/change-password")
+                        .authenticated()
+                        .anyRequest()
+                        .authenticated())
                 .addFilterBefore(jwtFilter,
                         UsernamePasswordAuthenticationFilter.class);
 
