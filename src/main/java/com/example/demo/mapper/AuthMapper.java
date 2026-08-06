@@ -9,9 +9,11 @@ import com.example.demo.entity.User;
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface AuthMapper {
 
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "mustChangePassword", source = "user.mustChangePassword")
     LoginResponseDTO toLoginResponse(String token, User user);
 
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "mustChangePassword", constant = "true")
     LoginResponseDTO toPasswordChangeRequiredResponse(String token, User user);
 }  
