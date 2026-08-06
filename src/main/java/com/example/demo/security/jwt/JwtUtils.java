@@ -33,6 +33,7 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .subject(user.getUsername())
+                .claim("type", "ACCESS")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
@@ -56,8 +57,7 @@ public class JwtUtils {
                 .subject(user.getUsername())
                 .claim("type", "PASSWORD_RESET")
                 .issuedAt(new Date())
-                .expiration(
-                        new Date(System.currentTimeMillis() + 15 * 60 * 1000))
+                .expiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
@@ -86,28 +86,24 @@ public class JwtUtils {
         return extractClaims(token).getExpiration();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isAccessToken(String token, UserDetails userDetails) {
 
-        String username = extractUsername(token);
-
-        return username.equals(userDetails.getUsername())
+        return extractUsername(token).equals(userDetails.getUsername())
+                && "ACCESS".equals(extractTokenType(token))
                 && !isTokenExpired(token);
     }
 
-    public boolean isPasswordChangeToken(String token) {
+    public boolean isPasswordChangeToken(String token, UserDetails userDetails) {
 
-        String type = extractTokenType(token);
-
-        return "PASSWORD_CHANGE".equals(type)
+        return extractUsername(token).equals(userDetails.getUsername())
+                && "PASSWORD_CHANGE".equals(extractTokenType(token))
                 && !isTokenExpired(token);
     }
 
-    public boolean isPasswordResetToken(String token) {
+    public boolean isPasswordResetToken(String token, UserDetails userDetails) {
 
-        String type = extractClaims(token)
-                .get("type", String.class);
-
-        return "PASSWORD_RESET".equals(type)
+        return extractUsername(token).equals(userDetails.getUsername())
+                && "PASSWORD_RESET".equals(extractTokenType(token))
                 && !isTokenExpired(token);
     }
 

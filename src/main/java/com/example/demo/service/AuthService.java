@@ -15,4 +15,5 @@ public interface AuthService {
     CustomerResponseDTO registerCustomer(CustomerRequestDTO customerRequestDTO);
     void forgotPassword(ForgotPasswordRequestDTO dto);
     void resetPassword(ResetPasswordRequestDTO dto);
+    LoginResponseDTO changePassword(ResetPasswordRequestDTO dto);
 }

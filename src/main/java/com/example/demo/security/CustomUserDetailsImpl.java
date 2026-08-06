@@ -52,6 +52,10 @@ public class CustomUserDetailsImpl implements UserDetails {
         return true;
     }
 
+    public boolean isMustChangePassword() {
+        return user.isMustChangePassword();
+    }
+
     public User getUser() {
         return user;
     }

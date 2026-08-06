@@ -173,27 +173,52 @@ public class AuthServiceImpl implements AuthService {
         }
 
         @Override
+        @Transactional
         public void resetPassword(ResetPasswordRequestDTO dto) {
-                if (!jwtUtils.isPasswordResetToken(dto.getToken())) {
-                        throw new RuntimeException(
-                                        "Invalid or expired reset token");
-                }
 
                 String email = jwtUtils.extractUsername(dto.getToken());
 
                 User user = userRepository.findByEmail(email)
                                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-                user.setPassword(
+                CustomUserDetailsImpl userDetails = new CustomUserDetailsImpl(user);
+
+                if (!jwtUtils.isPasswordResetToken(dto.getToken(), userDetails)) {
+                        throw new RuntimeException("Invalid or expired reset token");
+                }
+
+                user.changePassword(
                                 passwordEncoder.encode(dto.getNewPassword()));
-
-                user.setMustChangePassword(false);
-
-                user.setPasswordChangedAt(
-                                LocalDateTime.now());
 
                 userRepository.save(user);
 
                 logger.info("Password reset completed for {}", user.getEmail());
+        }
+
+        @Transactional
+        public LoginResponseDTO changePassword(ResetPasswordRequestDTO dto) {
+
+                String email = jwtUtils.extractUsername(dto.getToken());
+
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("User not found"));
+
+                CustomUserDetailsImpl userDetails = new CustomUserDetailsImpl(user);
+
+                if (!jwtUtils.isPasswordChangeToken(dto.getToken(), userDetails)) {
+                        throw new RuntimeException("Invalid or expired password change token");
+                }
+
+                user.changePassword(
+                                passwordEncoder.encode(dto.getNewPassword()));
+
+                userRepository.save(user);
+
+                logger.info("Temporary password changed for {}", user.getEmail());
+
+                String accessToken = jwtUtils.generateToken(
+                                new CustomUserDetailsImpl(user));
+
+                return authMapper.toLoginResponse(accessToken, user);
         }
 }

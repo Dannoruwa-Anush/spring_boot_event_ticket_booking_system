@@ -52,4 +52,10 @@ public class AuthController {
 
         return ResponseEntity.ok("Password updated successfully.");
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<LoginResponseDTO> changePassword(@RequestBody ResetPasswordRequestDTO dto) {
+
+        return ResponseEntity.ok(service.changePassword(dto));
+    }
 }
