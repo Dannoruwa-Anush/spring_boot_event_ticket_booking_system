@@ -7,6 +7,20 @@
 -- ============================================================
 -- Step 1: Create Tables
 -- ============================================================
+-- PERMISSIONS TB
+CREATE TABLE permissions ( 
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, 
+    name VARCHAR(100) NOT NULL, 
+    description VARCHAR(255) NULL, 
+
+    created_at DATETIME NOT NULL, 
+    updated_at DATETIME NOT NULL, 
+    created_by BIGINT NULL, 
+    updated_by BIGINT NULL, 
+
+    CONSTRAINT uq_permissions_name UNIQUE (name) 
+    );
+
 -- ROLES TB
 CREATE TABLE roles (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -18,6 +32,32 @@ CREATE TABLE roles (
     updated_by BIGINT NULL,
 
     CONSTRAINT uq_roles_name UNIQUE (name)
+);
+
+-- ROLE_PERMISSION TB
+CREATE TABLE role_permissions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, 
+    role_id BIGINT NOT NULL, 
+    permission_id BIGINT NOT NULL, 
+    
+    created_at DATETIME NOT NULL, 
+    updated_at DATETIME NOT NULL, 
+    created_by BIGINT NULL, 
+    updated_by BIGINT NULL, 
+    
+    CONSTRAINT uq_role_permissions_role_permission 
+    
+    UNIQUE (role_id, permission_id), 
+    
+    CONSTRAINT fk_role_permissions_role 
+        FOREIGN KEY (role_id) 
+        REFERENCES roles(id) 
+        ON UPDATE CASCADE ON DELETE RESTRICT, 
+        CONSTRAINT fk_role_permissions_permission 
+        FOREIGN KEY (permission_id) 
+        REFERENCES permissions(id) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT 
 );
 
 -- USERS TB
@@ -151,6 +191,20 @@ CREATE TABLE staff (
 -- ============================================================
 -- Step 2: Add Audit FK
 -- ============================================================
+-- Permissions
+ALTER TABLE permissions 
+ADD CONSTRAINT fk_permissions_created_by 
+FOREIGN KEY (created_by) 
+REFERENCES users(id) 
+ON UPDATE CASCADE ON DELETE RESTRICT; 
+
+ALTER TABLE permissions 
+ADD CONSTRAINT fk_permissions_updated_by 
+FOREIGN KEY (updated_by) 
+REFERENCES users(id) 
+ON UPDATE CASCADE 
+ON DELETE RESTRICT;
+
 -- Roles
 ALTER TABLE roles
 ADD CONSTRAINT fk_roles_created_by
@@ -164,6 +218,21 @@ ADD CONSTRAINT fk_roles_updated_by
 FOREIGN KEY (updated_by)
 REFERENCES users(id)
 ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+-- Role_permissions
+ALTER TABLE role_permissions 
+ADD CONSTRAINT fk_role_permissions_created_by 
+FOREIGN KEY (created_by) 
+REFERENCES users(id) 
+ON UPDATE CASCADE 
+ON DELETE RESTRICT; 
+
+ALTER TABLE role_permissions 
+ADD CONSTRAINT fk_role_permissions_updated_by 
+FOREIGN KEY (updated_by) 
+REFERENCES users(id) 
+ON UPDATE CASCADE 
 ON DELETE RESTRICT;
 
 -- Users

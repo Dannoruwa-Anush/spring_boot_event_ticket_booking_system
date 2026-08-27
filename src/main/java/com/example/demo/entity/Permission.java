@@ -3,17 +3,14 @@ package com.example.demo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.demo.config.enums.RoleTypeEnum;
+import org.springframework.data.annotation.Id;
+
 import com.example.demo.entity.Base.BaseEntity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -22,25 +19,24 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "permissions")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Role extends BaseEntity{
+public class Permission extends BaseEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
-    private RoleTypeEnum name;
 
-    // User (M) : (1) Role
-    @OneToMany(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")
-    private List<User> users;
+    @Column(nullable = false, unique = true, length = 100)
+    private String name;
 
-    //  RolePermission (M) : Role (1) 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(length = 255)
+    private String description;
+
+    //  Permission (1) : RolePermission (M) 
+    @OneToMany(mappedBy = "permission")
     private List<RolePermission> rolePermissions = new ArrayList<>();
 }
