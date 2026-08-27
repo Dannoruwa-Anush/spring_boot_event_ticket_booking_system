@@ -21,16 +21,17 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class BookingSeats extends BaseEntity{
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Seat (1) : (1) BookingSeat
+    // BookingSeat (1) : Seat (1)
     @OneToOne
     @JoinColumn(name = "seat_id", referencedColumnName = "id")
     private Seat seat;    
 
-    // Booking (1) : (1) BookingSeat
+    // BookingSeat (1) : Booking (1)
     @OneToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
     private Booking booking;  

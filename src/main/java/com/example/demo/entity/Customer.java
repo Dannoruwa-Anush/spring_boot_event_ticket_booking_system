@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Data // getters & setters
 @EqualsAndHashCode(callSuper = false)
 public class Customer extends BaseEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +38,7 @@ public class Customer extends BaseEntity{
     @Column(nullable = false)
     private String phoneNo;
 
-    // User (1) : (1) Customer
+    // Customer (1) : User (1)
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

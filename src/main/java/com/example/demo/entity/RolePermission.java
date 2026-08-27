@@ -32,7 +32,7 @@ public class RolePermission extends BaseEntity{
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    //  Permission (1) : RolePermission (M) 
+    //  RolePermission (M) : Permission (1) 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "permission_id", nullable = false)
     private Permission permission;

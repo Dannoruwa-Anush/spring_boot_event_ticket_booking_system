@@ -2,10 +2,14 @@ package com.example.demo.entity;
 
 import java.time.LocalDate;
 
+import com.example.demo.config.enums.PaymentMethodEnum;
+import com.example.demo.config.enums.PaymentStatusEnum;
 import com.example.demo.entity.Base.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Payment extends BaseEntity{
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,15 +36,19 @@ public class Payment extends BaseEntity{
     @Column(nullable = false)
     private double amount;
 
-    //enum payment_method
-
     @Column(nullable = true)
     private LocalDate payment_date;
 
     @Column(nullable = false)
     private String transactionRef;
 
-    //enum payment status
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    private PaymentMethodEnum paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    private PaymentStatusEnum status;
 
     // Payment (1) : (1) Booking
     @OneToOne

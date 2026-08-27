@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Staff extends BaseEntity {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,12 +52,12 @@ public class Staff extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StaffEmploymentStatusEnum employmentStatus;
 
-    // User (1) : (1) Staff
+    // Staff (1) : User (1)
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    // Position (M) : (1) Staff
+    // Staff (1) : Position (M)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", nullable = false)
     private Position position;

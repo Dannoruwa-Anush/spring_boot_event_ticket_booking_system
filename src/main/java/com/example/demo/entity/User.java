@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Data // getters & setters
 @EqualsAndHashCode(callSuper = false)
 public class User extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,16 +54,16 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private boolean systemAccount = false;
 
-    // User (M) : (1) Role
+    // User (M) : Role (1) 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id") // Owns the foreign key (it has @JoinColumn)
     private Role role;
 
-    // User (1) : (1) Staff
+    // User (1) : Staff (1) 
     @OneToOne(mappedBy = "user")
     private Staff staff;
 
-    // User (1) : (1) Customer
+    // User (1) : Customer (1) 
     @OneToOne(mappedBy = "user")
     private Customer customer;
 

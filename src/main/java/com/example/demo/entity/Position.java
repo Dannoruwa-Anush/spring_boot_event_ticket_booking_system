@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Position extends BaseEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +31,7 @@ public class Position extends BaseEntity{
     @Column(nullable = false)
     private String name;
 
-    // Position (M) : (1) Staff
+    // Position (M) : Staff (1) 
     @OneToMany(mappedBy = "position")
     private List<Staff> staff;
 }

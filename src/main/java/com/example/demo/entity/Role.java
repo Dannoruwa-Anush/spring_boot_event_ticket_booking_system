@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Role extends BaseEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,11 +37,11 @@ public class Role extends BaseEntity{
     @Column(nullable = false, unique = true)
     private RoleTypeEnum name;
 
-    // User (M) : (1) Role
+    //  Role (1) : User (M)
     @OneToMany(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")
     private List<User> users;
 
-    //  RolePermission (M) : Role (1) 
+    //  Role (1) : RolePermission (M) 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RolePermission> rolePermissions = new ArrayList<>();
 }
