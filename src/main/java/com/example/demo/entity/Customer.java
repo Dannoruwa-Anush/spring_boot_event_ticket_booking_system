@@ -40,12 +40,12 @@ public class Customer extends BaseEntity{
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
-    @Column(nullable = false)
+    @Column(name = "phone_no", nullable = false)
     private String phoneNo;
 
     // Customer (1) : User (1)
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     // Customer (1) : Booking (M)

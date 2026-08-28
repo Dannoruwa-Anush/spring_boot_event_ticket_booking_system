@@ -43,7 +43,7 @@ public class Payment extends BaseEntity{
     @Column(name = "payment_date", nullable = true)
     private LocalDate paymentDate;
 
-    @Column(nullable = false)
+    @Column(name = "transaction_ref", nullable = false, unique = true)
     private String transactionRef;
 
     @Enumerated(EnumType.STRING)
@@ -51,7 +51,7 @@ public class Payment extends BaseEntity{
     private PaymentMethodEnum paymentMethod;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "payment_method", nullable = false)
     private PaymentStatusEnum status;
 
     // Payment (1) : (1) Booking

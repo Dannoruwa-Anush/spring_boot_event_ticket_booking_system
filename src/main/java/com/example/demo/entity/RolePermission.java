@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +18,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "role_permissions")
+@Table(
+    name = "role_permissions",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uq_role_permissions_role_permission",
+            columnNames = {"role_id", "permission_id"}
+        )
+    }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

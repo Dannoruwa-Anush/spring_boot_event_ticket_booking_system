@@ -44,8 +44,8 @@ public class Booking extends BaseEntity{
     @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
-    @Column(nullable = true)
-    private LocalDate booking_date;
+    @Column(name = "booking_date", nullable = true)
+    private LocalDate bookingDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

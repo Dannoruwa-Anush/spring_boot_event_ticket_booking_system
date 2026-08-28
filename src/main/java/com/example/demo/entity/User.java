@@ -42,18 +42,19 @@ public class User extends BaseEntity {
     private String password;
 
     // Security Management
-    @Column(nullable = false)
+    @Column(name = "must_change_password", nullable = false)
     private boolean mustChangePassword = false;
 
+    @Column(name = "password_changed_at")
     private LocalDateTime passwordChangedAt;
 
-    @Column(nullable = false)
+    @Column(name = "failed_login_attempts", nullable = false)
     private int failedLoginAttempts = 0;
 
-    @Column(nullable = true)
+    @Column(name = "account_locked_until", nullable = true)
     private LocalDateTime accountLockedUntil;
 
-    @Column(nullable = false)
+    @Column(name = "system_account", nullable = false)
     private boolean systemAccount = false;
 
     // User (M) : Role (1) 

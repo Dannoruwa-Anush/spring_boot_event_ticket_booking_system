@@ -30,10 +30,10 @@ public class PasswordResetToken extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "token_hash", unique = true, nullable = false, length = 255)
     private String tokenHash;
 
-    @Column(nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     private LocalDateTime expiryDate;
 
     @Column(nullable = false)

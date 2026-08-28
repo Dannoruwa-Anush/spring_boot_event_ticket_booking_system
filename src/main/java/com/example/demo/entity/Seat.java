@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +22,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "seats")
+@Table(
+    name = "seats",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uq_seat_event_number",
+            columnNames = {"event_id", "seat_number"}
+        )
+    }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -33,7 +42,7 @@ public class Seat extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "seat_number", nullable = false)
     private String seatNumber;
 
     @Column(nullable = false)

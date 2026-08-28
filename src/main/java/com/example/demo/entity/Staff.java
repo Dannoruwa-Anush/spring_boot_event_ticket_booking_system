@@ -39,13 +39,13 @@ public class Staff extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "employee_no", nullable = false, unique = true)
     private String employeeNo; // Format emp**** - *** auto assign
 
     @Column(nullable = false, unique = true)
     private String nic;
 
-    @Column(nullable = false)
+    @Column(name = "phone_no", nullable = false)
     private String phoneNo;
 
     @Column(name = "hire_date", nullable = false)
