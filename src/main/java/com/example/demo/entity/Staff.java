@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.demo.config.enums.StaffEmploymentStatusEnum;
 import com.example.demo.entity.Base.BaseEntity;
@@ -15,18 +17,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "staff")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class Staff extends BaseEntity {
     
@@ -43,11 +48,11 @@ public class Staff extends BaseEntity {
     @Column(nullable = false)
     private String phoneNo;
 
-    @Column(nullable = false)
-    private LocalDate hire_date;
+    @Column(name = "hire_date", nullable = false)
+    private LocalDate hireDate;
 
-    @Column(nullable = true)
-    private LocalDate termination_date;
+    @Column(name = "termination_date", nullable = true)
+    private LocalDate terminationDate;
 
     @Enumerated(EnumType.STRING)
     private StaffEmploymentStatusEnum employmentStatus;
@@ -57,8 +62,12 @@ public class Staff extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    // Staff (1) : Position (M)
+    // Staff (M) : Position (1) 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", nullable = false)
     private Position position;
+
+    // Staff (1) : Event (M)
+    @OneToMany(mappedBy = "staff")
+    private List<Event> events = new ArrayList<>();
 }

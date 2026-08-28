@@ -17,15 +17,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class Role extends BaseEntity{
 
@@ -39,7 +41,7 @@ public class Role extends BaseEntity{
 
     //  Role (1) : User (M)
     @OneToMany(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     //  Role (1) : RolePermission (M) 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)

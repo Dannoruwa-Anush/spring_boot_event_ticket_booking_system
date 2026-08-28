@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.demo.entity.Base.BaseEntity;
@@ -12,15 +13,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "positions")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class Position extends BaseEntity{
 
@@ -31,7 +34,7 @@ public class Position extends BaseEntity{
     @Column(nullable = false)
     private String name;
 
-    // Position (M) : Staff (1) 
+    // Staff (M) : Position (1) 
     @OneToMany(mappedBy = "position")
-    private List<Staff> staff;
+    private List<Staff> staff = new ArrayList<>();
 }

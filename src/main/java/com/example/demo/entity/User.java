@@ -14,15 +14,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor // needed for JPA
 @AllArgsConstructor
-@Data // getters & setters
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class User extends BaseEntity {
 
