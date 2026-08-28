@@ -347,7 +347,7 @@ CREATE TABLE payments (
 
     amount DECIMAL(12,2) NOT NULL,
 
-    payment_date DATETIME NULL,
+    paid_at DATETIME NULL,
 
     transaction_ref VARCHAR(100) NOT NULL,
 

@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.example.demo.config.enums.PaymentMethodEnum;
 import com.example.demo.config.enums.PaymentStatusEnum;
@@ -40,18 +40,18 @@ public class Payment extends BaseEntity{
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal amount;
 
-    @Column(name = "payment_date", nullable = true)
-    private LocalDate paymentDate;
+    @Column(name = "paid_at", nullable = true)
+    private LocalDateTime paidAt;
 
     @Column(name = "transaction_ref", nullable = false, unique = true)
     private String transactionRef;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "payment_method", nullable = false)
     private PaymentMethodEnum paymentMethod;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", nullable = false)
+    @Column(nullable = false)
     private PaymentStatusEnum status;
 
     // Payment (1) : (1) Booking
