@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.math.BigDecimal;
+
 import com.example.demo.config.enums.SeatStatusEnum;
 import com.example.demo.entity.Base.BaseEntity;
 
@@ -48,8 +50,8 @@ public class Seat extends BaseEntity{
     @Column(nullable = false)
     private String section;
 
-    @Column(nullable = false)
-    private double price;
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
