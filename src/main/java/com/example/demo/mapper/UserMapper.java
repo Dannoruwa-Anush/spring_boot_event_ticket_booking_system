@@ -17,6 +17,8 @@ public interface UserMapper {
     @Mapping(target = "mustChangePassword", ignore = true)
     @Mapping(target = "passwordChangedAt", ignore = true)
     @Mapping(target = "systemAccount", ignore = true)
+    @Mapping(target = "failedLoginAttempts", ignore = true)
+    @Mapping(target = "accountLockedUntil", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
@@ -31,9 +33,11 @@ public interface UserMapper {
     List<UserResponseDTO> toResponseDTOList(List<User> users);
     
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "systemAccount", ignore = true)
     @Mapping(target = "mustChangePassword", ignore = true)
     @Mapping(target = "passwordChangedAt", ignore = true)
+    @Mapping(target = "systemAccount", ignore = true)
+    @Mapping(target = "failedLoginAttempts", ignore = true)
+    @Mapping(target = "accountLockedUntil", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

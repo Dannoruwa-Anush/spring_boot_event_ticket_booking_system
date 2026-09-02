@@ -84,7 +84,7 @@ public class StaffServiceImpl implements StaffService {
         staff.setEmployeeNo("EMP" + String.format("%06d", (int) (Math.random() * 1_000_000)));
         staff.setNic(staffRequestDTO.getNic());
         staff.setPhoneNo(staffRequestDTO.getPhoneNo());
-        staff.setHireDate(staffRequestDTO.getHire_date());
+        staff.setHireDate(staffRequestDTO.getHireDate());
         staff.setEmploymentStatus(StaffEmploymentStatusEnum.ACTIVE);
         staff.setUser(user);
         staff.setPosition(position);

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class StaffRequestDTO {
     private String nic;
     private String phoneNo;
-    private LocalDate hire_date;
+    private LocalDate hireDate;
 
     private long positionId;
     private StaffUserRegisterRequestDTO user;

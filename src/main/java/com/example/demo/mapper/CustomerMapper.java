@@ -19,6 +19,7 @@ public interface CustomerMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "bookings", ignore = true)
     Customer toEntty(CustomerRequestDTO dto);
 
     CustomerResponseDTO toResponseDTO(Customer customer);
@@ -30,5 +31,6 @@ public interface CustomerMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "bookings", ignore = true)
     void updateCustomerFromDto(CustomerRequestDTO dto, @MappingTarget Customer customer);
 }

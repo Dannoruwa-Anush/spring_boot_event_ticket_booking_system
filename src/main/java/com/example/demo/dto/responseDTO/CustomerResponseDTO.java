@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class CustomerResponseDTO {
     private Long id;
     private String address;
-    private LocalDate date_of_birth;
+    private LocalDate dateOfBirth;
     private String phoneNo;
 
     private UserResponseDTO user;
