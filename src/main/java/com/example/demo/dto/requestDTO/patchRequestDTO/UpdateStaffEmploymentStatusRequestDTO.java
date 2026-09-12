@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class UpdateStaffEmploymentStatusRequestDTO {
-    private LocalDate termination_date;
+    private LocalDate terminationDate;
     private StaffEmploymentStatusEnum employmentStatus;
 }

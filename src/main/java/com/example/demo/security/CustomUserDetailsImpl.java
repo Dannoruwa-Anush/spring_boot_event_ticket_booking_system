@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,7 +20,31 @@ public class CustomUserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().getName().name()));
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        // Role
+        authorities.add(
+                new SimpleGrantedAuthority(
+                        "ROLE_" + user.getRole().getName().name()
+                )
+        );
+
+        // Permissions
+        user.getRole()
+                .getRolePermissions()
+                .forEach(rolePermission ->
+                        authorities.add(
+                                new SimpleGrantedAuthority(
+                                        rolePermission
+                                                .getPermission()
+                                                .getName()
+                                                .name()
+                                )
+                        )
+                );
+
+        return authorities;
     }
 
     @Override
