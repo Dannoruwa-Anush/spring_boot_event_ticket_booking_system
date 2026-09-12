@@ -185,7 +185,7 @@ public class StaffServiceImpl implements StaffService {
             throw new IllegalArgumentException("Invalid employment status.");
         }
 
-        if (staffStatusRequestDTO.getTermination_date() == null) {
+        if (staffStatusRequestDTO.getTerminationDate() == null) {
             throw new IllegalArgumentException(
                     "Termination date is required when ending employment.");
         }

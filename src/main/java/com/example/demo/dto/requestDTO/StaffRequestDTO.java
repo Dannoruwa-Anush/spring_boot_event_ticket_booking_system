@@ -14,6 +14,6 @@ public class StaffRequestDTO {
     private String phoneNo;
     private LocalDate hireDate;
 
-    private long positionId;
+    private Long positionId;
     private StaffUserRegisterRequestDTO user;
 }

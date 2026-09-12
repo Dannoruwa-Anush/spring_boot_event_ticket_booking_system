@@ -15,42 +15,45 @@ import com.example.demo.entity.Staff;
 public interface StaffMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "employeeNo", ignore = true)
     @Mapping(target = "terminationDate", ignore = true)
     @Mapping(target = "employmentStatus", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "position", ignore = true)
+    @Mapping(target = "events", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     Staff toEntity(StaffRequestDTO dto);
 
     StaffResponseDTO toResponseDTO(Staff staff);
     List<StaffResponseDTO> toResponseDTOList(List<Staff> staffMembers);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "employeeNo", ignore = true)
     @Mapping(target = "terminationDate", ignore = true)
     @Mapping(target = "employmentStatus", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "position", ignore = true)
-    void updateStaffFromDTO(StaffRequestDTO dto, @MappingTarget Staff staff);
-
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "events", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
+    void updateStaffFromDTO(StaffRequestDTO dto, @MappingTarget Staff staff);
+
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "employeeNo", ignore = true)
     @Mapping(target = "nic", ignore = true)
     @Mapping(target = "phoneNo", ignore = true)
     @Mapping(target = "hireDate", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "position", ignore = true)
+    @Mapping(target = "events", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     void updateEmploymentStatusFromDTO(UpdateStaffEmploymentStatusRequestDTO dto, @MappingTarget Staff staff);
 }
