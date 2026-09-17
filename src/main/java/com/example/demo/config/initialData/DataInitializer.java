@@ -8,10 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.config.enums.RoleTypeEnum;
+import com.example.demo.config.enums.PermissionTypeEnum;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.entity.Permission;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.PermissionRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +24,7 @@ public class DataInitializer {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final PermissionRepository permissionRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -84,6 +88,20 @@ public class DataInitializer {
 
                         return userRepository.save(adminUser);
                     });
+
+            // Step 4: Create initial permissions
+            for (PermissionTypeEnum permissionType : PermissionTypeEnum.values()) {
+                if (!permissionRepository.existsByName(permissionType)) {
+                    Permission permission = new Permission();
+
+                    permission.setName(permissionType);
+                    permission.setDescription(
+                        permissionType.name().replace("_", " ")
+                    );
+
+                    permissionRepository.save(permission);
+                }
+            }        
         };
     }
 }

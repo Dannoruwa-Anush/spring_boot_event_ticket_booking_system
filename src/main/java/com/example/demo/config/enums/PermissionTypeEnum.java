@@ -1,11 +1,10 @@
 package com.example.demo.config.enums;
 
 public enum PermissionTypeEnum {
+    // User
     USER_CREATE,
     USER_UPDATE,
     USER_DELETE,
-    USER_VIEW,
-    ROLE_MANAGE,
-    PERMISSION_MANAGE,
-    REPORT_VIEW
+
+    // Role
 }
