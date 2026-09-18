@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +20,6 @@ import com.example.demo.dto.responseDTO.RolePermissionResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.service.RolePermissionService;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/role-permissions")
 public class RolePermissionController {
@@ -29,10 +30,12 @@ public class RolePermissionController {
         }
 
         @PostMapping
-        public ResponseEntity<RolePermissionResponseDTO> createRolePermissions(@Valid @RequestBody RolePermissionRequestDTO dto) {
-                RolePermissionResponseDTO response = service.createRolePermissions(dto);
-                return ResponseEntity.status(HttpStatus.CREATED).build(response);
+        public ResponseEntity<List<RolePermissionResponseDTO>> createRolePermissions(@Validated @RequestBody RolePermissionRequestDTO dto) {
+                List<RolePermissionResponseDTO> response = service.createRolePermissions(dto);
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
+
         
         @GetMapping
         public ResponseEntity<PageResponseDTO<RolePermissionResponseDTO>> getAllRolePermissions(Pageable pageable) {
@@ -47,7 +50,7 @@ public class RolePermissionController {
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<RolePermissionResponseDTO> updateRolePermission(@PathVariable Long id, @Valid @RequestBody RolePermissionRequestDTO dto) {
+        public ResponseEntity<RolePermissionResponseDTO> updateRolePermission(@PathVariable Long id, @Validated @RequestBody RolePermissionRequestDTO dto) {
                 RolePermissionResponseDTO response = service.updateRolePermission(id, dto);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
         }
