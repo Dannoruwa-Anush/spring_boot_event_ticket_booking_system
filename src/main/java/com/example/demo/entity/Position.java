@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.config.enums.PositionEnum;
 import com.example.demo.entity.Base.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -31,8 +32,9 @@ public class Position extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private String name;
+    private PositionTypeEnum name;
 
     // Staff (M) : Position (1) 
     @OneToMany(mappedBy = "position")
