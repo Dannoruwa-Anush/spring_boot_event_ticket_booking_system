@@ -9,9 +9,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.config.enums.PermissionTypeEnum;
+import com.example.demo.config.enums.PositionTypeEnum;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Permission;
+import com.example.demo.entity.Position;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.PermissionRepository;
@@ -92,7 +94,7 @@ public class DataInitializer {
                     });
             
             // Step 4: Create initial staff positions
-            for (PositionEnum positionEnum : PositionEnum.values()) {
+            for (PositionTypeEnum positionEnum : PositionTypeEnum.values()) {
                 if (!positionRepository.existsByName(positionEnum)) {
                     Position position = new Position();
                     position.setName(positionEnum);
