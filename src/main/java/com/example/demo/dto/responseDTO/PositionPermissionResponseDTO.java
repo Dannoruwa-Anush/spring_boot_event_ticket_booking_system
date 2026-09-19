@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RolePermissionResponseDTO {
+public class PositionPermissionResponseDTO {
     private Long id;
-    private RoleResponseDTO role;
+    private PositionResponseDTO position;
     private PermissionResponseDTO permission;
 }

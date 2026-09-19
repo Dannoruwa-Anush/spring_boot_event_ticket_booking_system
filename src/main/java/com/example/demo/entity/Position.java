@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,4 +42,8 @@ public class Position extends BaseEntity{
     // Staff (M) : Position (1) 
     @OneToMany(mappedBy = "position")
     private List<Staff> staff = new ArrayList<>();
+
+    //  Position (1) : PositionPermission (M) 
+    @OneToMany(mappedBy = "position", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PositionPermission> positionPermissions = new ArrayList<>();
 }

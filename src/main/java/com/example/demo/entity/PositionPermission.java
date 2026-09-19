@@ -19,11 +19,11 @@ import lombok.Setter;
 
 @Entity
 @Table(
-    name = "role_permissions",
+    name = "position_permissions",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uq_role_permissions_role_permission",
-            columnNames = {"role_id", "permission_id"}
+            name = "uq_position_permissions_position_permission",
+            columnNames = {"position_id", "permission_id"}
         )
     }
 )
@@ -32,18 +32,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
-public class RolePermission extends BaseEntity{
+public class PositionPermission extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //  RolePermission (M) : Role (1) 
+    //  PositionPermission (M) : Position (1) 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @JoinColumn(name = "position_id", nullable = false)
+    private Position position;
 
-    //  RolePermission (M) : Permission (1) 
+    //  PositionPermission (M) : Permission (1) 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "permission_id", nullable = false)
     private Permission permission;

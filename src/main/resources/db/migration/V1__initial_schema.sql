@@ -86,11 +86,11 @@ CREATE TABLE users (
         ON DELETE RESTRICT
 );
 
--- ROLE_PERMISSIONS Tbl
-CREATE TABLE role_permissions (
+-- POSITION_PERMISSIONS Tbl
+CREATE TABLE position_permissions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    role_id BIGINT NOT NULL,
+    position_id BIGINT NOT NULL,
     permission_id BIGINT NOT NULL,
 
     created_at DATETIME NOT NULL,
@@ -98,16 +98,16 @@ CREATE TABLE role_permissions (
     created_by BIGINT NULL,
     updated_by BIGINT NULL,
 
-    CONSTRAINT uq_role_permissions_role_permission
-        UNIQUE (role_id, permission_id),
+    CONSTRAINT uq_position_permissions_role_permission
+        UNIQUE (position_id, permission_id),
 
-    CONSTRAINT fk_role_permissions_role
-        FOREIGN KEY (role_id)
-        REFERENCES roles(id)
+    CONSTRAINT fk_position_permissions_role
+        FOREIGN KEY (position_id)
+        REFERENCES positions(id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
 
-    CONSTRAINT fk_role_permissions_permission
+    CONSTRAINT fk_position_permissions_permission
         FOREIGN KEY (permission_id)
         REFERENCES permissions(id)
         ON UPDATE CASCADE
@@ -415,16 +415,16 @@ ON UPDATE CASCADE
 ON DELETE RESTRICT;
 
 
--- ROLE_PERMISSIONS
-ALTER TABLE role_permissions
-ADD CONSTRAINT fk_role_permissions_created_by
+-- POSITION_PERMISSIONS
+ALTER TABLE position_permissions
+ADD CONSTRAINT fk_position_permissions_created_by
 FOREIGN KEY (created_by)
 REFERENCES users(id)
 ON UPDATE CASCADE
 ON DELETE RESTRICT;
 
-ALTER TABLE role_permissions
-ADD CONSTRAINT fk_role_permissions_updated_by
+ALTER TABLE position_permissions
+ADD CONSTRAINT fk_position_permissions_updated_by
 FOREIGN KEY (updated_by)
 REFERENCES users(id)
 ON UPDATE CASCADE

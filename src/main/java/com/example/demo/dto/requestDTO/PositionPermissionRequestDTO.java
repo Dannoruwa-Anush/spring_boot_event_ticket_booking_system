@@ -11,10 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RolePermissionRequestDTO {
+public class PositionPermissionRequestDTO {
 
-    @NotNull(message = "Role ID cannot be null")
-    private Long roleId;
+    @NotNull(message = "Position ID cannot be null")
+    private Long positionId;
 
     @NotEmpty(message = "Permission IDs cannot be empty")
     private List<Long> permissionIds;

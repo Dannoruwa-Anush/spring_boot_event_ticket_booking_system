@@ -29,7 +29,6 @@ public class UserController {
         this.service = service;
     }
 
-    @PreAuthorize("hasAuthority('USER_CREATE')")
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO dto) {
         UserResponseDTO response = service.createUser(dto);
@@ -48,14 +47,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PreAuthorize("hasAuthority('USER_UPDATE')")
+    @PreAuthorize("hasRole('STAFF') && hasAuthority('EVENT_ASSIGN_STAFF')")
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO dto) {
         UserResponseDTO response = service.updateUser(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PreAuthorize("hasAuthority('USER_DELETE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         service.deleteUser(id);

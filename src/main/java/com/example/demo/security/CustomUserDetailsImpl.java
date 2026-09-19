@@ -30,19 +30,24 @@ public class CustomUserDetailsImpl implements UserDetails {
                 )
         );
 
-        // Permissions
-        user.getRole()
-                .getRolePermissions()
-                .forEach(rolePermission ->
-                        authorities.add(
-                                new SimpleGrantedAuthority(
-                                        rolePermission
-                                                .getPermission()
-                                                .getName()
-                                                .name()
-                                )
-                        )
-                );
+        // Position Permissions
+        if (user.getStaff() != null
+                && user.getStaff().getPosition() != null) {
+
+            user.getStaff()
+                    .getPosition()
+                    .getPositionPermissions()
+                    .forEach(positionPermission ->
+                            authorities.add(
+                                    new SimpleGrantedAuthority(
+                                            positionPermission
+                                                    .getPermission()
+                                                    .getName()
+                                                    .name()
+                                    )
+                            )
+                    );
+        }
 
         return authorities;
     }

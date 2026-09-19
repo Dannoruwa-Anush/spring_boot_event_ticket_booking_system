@@ -42,8 +42,4 @@ public class Role extends BaseEntity{
     //  Role (1) : User (M)
     @OneToMany(mappedBy = "role") // Mirrors the relationship: used for navigation only (mappedBy = "role")
     private List<User> users = new ArrayList<>();
-
-    //  Role (1) : RolePermission (M) 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RolePermission> rolePermissions = new ArrayList<>();
 }
