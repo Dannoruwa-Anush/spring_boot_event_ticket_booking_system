@@ -234,7 +234,7 @@ CREATE TABLE events (
     capacity INT NOT NULL,
 
     poster_image VARCHAR(255) NOT NULL,
-    trailer_url VARCHAR(255);
+    trailer_url VARCHAR(255),
     
     status VARCHAR(50) NOT NULL,
 
