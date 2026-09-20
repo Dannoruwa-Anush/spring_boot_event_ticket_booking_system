@@ -61,6 +61,9 @@ public class Event extends BaseEntity {
     @Column(name = "poster_image", nullable = false)
     private String posterImage;
 
+    @Column(name = "trailer_url", nullable = true)
+    private String trailerUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EventStatusEnum status;
