@@ -18,35 +18,33 @@ public class CustomUserDetailsImpl implements UserDetails {
         this.user = user;
     }
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         // Role
-        authorities.add(
-                new SimpleGrantedAuthority(
-                        "ROLE_" + user.getRole().getName().name()
-                )
-        );
+        if (user.getRole() != null) {
+            authorities.add(
+                    new SimpleGrantedAuthority(
+                            "ROLE_" + user.getRole().getName().name()));
+        }
 
-        // Position Permissions
-        if (user.getStaff() != null
-                && user.getStaff().getPosition() != null) {
-
+        // Staff Position Permissions
+        if (user.getStaff() != null && user.getStaff().getPosition() != null) {
             user.getStaff()
                     .getPosition()
                     .getPositionPermissions()
-                    .forEach(positionPermission ->
+                    .forEach(positionPermission -> {
+
+                        if (positionPermission.getPermission() != null) {
                             authorities.add(
                                     new SimpleGrantedAuthority(
                                             positionPermission
                                                     .getPermission()
                                                     .getName()
-                                                    .name()
-                                    )
-                            )
-                    );
+                                                    .name()));
+                        }
+                    });
         }
 
         return authorities;
