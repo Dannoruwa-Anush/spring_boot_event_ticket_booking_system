@@ -41,7 +41,7 @@ public class Permission extends BaseEntity{
     @Column(length = 255)
     private String description;
 
-    //  Permission (1) : RolePermission (M) 
+    //  Permission (1) : PositionPermission (M) 
     @OneToMany(mappedBy = "permission")
-    private List<RolePermission> rolePermissions = new ArrayList<>();
+    private List<PositionPermission> positionPermissions = new ArrayList<>();
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import com.example.demo.config.enums.RoleTypeEnum;
 import com.example.demo.entity.Base.BaseEntity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -18,7 +18,6 @@ public interface RoleMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "users", ignore = true)
-    @Mapping(target = "rolePermissions", ignore = true)
     Role toEntity(RoleRequestDTO dto);
 
 
@@ -31,6 +30,5 @@ public interface RoleMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "users", ignore = true)
-    @Mapping(target = "rolePermissions", ignore = true)
     void updateRoleFromDto(RoleRequestDTO dto, @MappingTarget Role role);
 }

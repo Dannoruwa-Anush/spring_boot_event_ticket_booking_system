@@ -17,7 +17,7 @@ public interface PermissionMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "rolePermissions", ignore = true)
+    @Mapping(target = "positionPermissions", ignore = true)
     Permission toEnity(PermissionRequestDTO dto);
 
     PermissionResponseDTO toResponseDTO(Permission permission);
@@ -28,6 +28,6 @@ public interface PermissionMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "rolePermissions", ignore = true)
+    @Mapping(target = "positionPermissions", ignore = true)
     void updatePermissionFromDto(PermissionRequestDTO dto, @MappingTarget Permission permission);
 }
