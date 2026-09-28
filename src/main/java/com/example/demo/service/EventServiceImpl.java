@@ -14,6 +14,8 @@ import com.example.demo.dto.requestDTO.EventRequestDTO;
 import com.example.demo.dto.responseDTO.EventResponseDTO;
 import com.example.demo.dto.responseDTO.common.PageResponseDTO;
 import com.example.demo.entity.Event;
+import com.example.demo.dto.requestDTO.SeatRequestDTO;
+import com.example.demo.entity.Seat;
 import com.example.demo.mapper.EventMapper;
 import com.example.demo.repository.EventRepository;
 
@@ -39,45 +41,55 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventResponseDTO createEvent(
-            EventRequestDTO dto,
-            MultipartFile posterImage) {
+    public EventResponseDTO createEvent(EventRequestDTO dto, MultipartFile posterImage) {
 
         // Image is required when creating an event
         if (posterImage == null || posterImage.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Poster image is required");
+            throw new IllegalArgumentException("Poster image is required");
         }
 
-        // Save image
-        String imageFilename =
-                fileStorageService.save(posterImage);
+        String imageFilename = fileStorageService.save(posterImage);
 
         try {
-            // Convert DTO -> Entity
+            // Convert DTO -> Event
             Event event = mapper.toEntity(dto);
 
-            // Set saved image filename
             event.setPosterImage(imageFilename);
 
-            // Save event
+            // Create seats
+            if (dto.getSeats() != null) {
+
+                for (SeatRequestDTO seatDto : dto.getSeats()) {
+
+                    Seat seat = new Seat();
+
+                    seat.setSeatNumber(seatDto.getSeatNumber());
+                    seat.setSection(seatDto.getSection());
+                    seat.setPrice(seatDto.getPrice());
+                    seat.setStatus(seatDto.getStatus());
+
+                    // Set the parent Event
+                    seat.setEvent(event);
+
+                    // Add seat to Event
+                    event.getSeats().add(seat);
+                }
+            }
+
             Event savedEvent = repository.save(event);
 
-            logger.info(
-                    "Event created successfully. ID: {}",
-                    savedEvent.getId());
+            logger.info("Event created successfully. ID: {}", savedEvent.getId());
 
             return mapper.toResponseDTO(savedEvent);
 
         } catch (Exception e) {
 
-            // Database save failed,
-            // so remove the image that was already uploaded.
             fileStorageService.delete(imageFilename);
 
             throw e;
         }
     }
+
 
     @Override
     public PageResponseDTO<EventResponseDTO> getAllEvents(
@@ -132,10 +144,21 @@ public class EventServiceImpl implements EventService {
 
         try {
 
-            // Update normal event fields
+            // ----------------------------------------
+            // 1. Update normal event fields
+            // ----------------------------------------
             mapper.updateEntity(dto, event);
 
-            // Handle new image
+
+            // ----------------------------------------
+            // 2. Update seats
+            // ----------------------------------------
+            updateSeats(event, dto.getSeats());
+
+
+            // ----------------------------------------
+            // 3. Handle new poster image
+            // ----------------------------------------
             if (posterImage != null && !posterImage.isEmpty()) {
 
                 // Save new image
@@ -145,19 +168,35 @@ public class EventServiceImpl implements EventService {
                 event.setPosterImage(newImage);
             }
 
-            // Save updated event
+
+            // ----------------------------------------
+            // 4. Save event + seats
+            // ----------------------------------------
             Event updatedEvent = repository.save(event);
 
-            // Delete old image ONLY after DB save succeeds
-            if (newImage != null && oldImage != null && !oldImage.equals(newImage)) {
+
+            // ----------------------------------------
+            // 5. Delete old image only after
+            //    database save succeeds
+            // ----------------------------------------
+            if (newImage != null
+                    && oldImage != null
+                    && !oldImage.equals(newImage)) {
+
                 fileStorageService.delete(oldImage);
             }
 
-            logger.info("Event updated successfully. ID: {}", updatedEvent.getId());
+
+            logger.info(
+                    "Event updated successfully. ID: {}",
+                    updatedEvent.getId());
 
             return mapper.toResponseDTO(updatedEvent);
 
         } catch (Exception e) {
+
+            // If database update fails,
+            // remove newly uploaded image.
             if (newImage != null) {
                 fileStorageService.delete(newImage);
             }
@@ -165,6 +204,83 @@ public class EventServiceImpl implements EventService {
             throw e;
         }
     }
+
+    // Helper Method
+    private void updateSeats(Event event, List<SeatRequestDTO> seatDtos) {
+
+        // If seats are not supplied,
+        // don't change existing seats.
+        if (seatDtos == null) {
+            return;
+        }
+
+
+        // ----------------------------------------
+        // 1. Update existing seats / add new seats
+        // ----------------------------------------
+
+        for (SeatRequestDTO seatDto : seatDtos) {
+
+            Seat existingSeat = event.getSeats()
+                    .stream()
+                    .filter(seat ->
+                            seat.getSeatNumber()
+                                    .equals(seatDto.getSeatNumber()))
+                    .findFirst()
+                    .orElse(null);
+
+
+            if (existingSeat != null) {
+
+                // Existing seat -> update
+                existingSeat.setSection(
+                        seatDto.getSection());
+
+                existingSeat.setPrice(
+                        seatDto.getPrice());
+
+                existingSeat.setStatus(
+                        seatDto.getStatus());
+
+            } else {
+
+                // New seat -> create
+                Seat newSeat = new Seat();
+
+                newSeat.setSeatNumber(
+                        seatDto.getSeatNumber());
+
+                newSeat.setSection(
+                        seatDto.getSection());
+
+                newSeat.setPrice(
+                        seatDto.getPrice());
+
+                newSeat.setStatus(
+                        seatDto.getStatus());
+
+                // Set relationship
+                newSeat.setEvent(event);
+
+                // Add to event
+                event.getSeats().add(newSeat);
+            }
+        }
+
+
+        // ----------------------------------------
+        // 2. Remove seats that are no longer
+        //    included in the request
+        // ----------------------------------------
+
+        event.getSeats().removeIf(existingSeat ->
+                seatDtos.stream()
+                        .noneMatch(seatDto ->
+                                seatDto.getSeatNumber()
+                                        .equals(existingSeat.getSeatNumber()))
+        );
+    }
+
 
     @Override
     @Transactional
@@ -177,23 +293,20 @@ public class EventServiceImpl implements EventService {
                                 "Event not found with id: " + id));
 
         // Get image filename before deleting entity
-        String imageFilename =
-                event.getPosterImage();
+        String imageFilename = event.getPosterImage();
 
         try {
-
-            // Delete event from database
             repository.delete(event);
 
-            // Delete physical image
-            if (imageFilename != null
-                    && !imageFilename.isBlank()) {
+            // Delete physical poster image
+            if (imageFilename != null && !imageFilename.isBlank()) {
 
                 fileStorageService.delete(imageFilename);
             }
 
+
             logger.info(
-                    "Event deleted successfully. ID: {}",
+                    "Event and associated seats deleted successfully. ID: {}",
                     id);
 
         } catch (Exception e) {

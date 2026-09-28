@@ -1,13 +1,19 @@
 package com.example.demo.dto.requestDTO;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+import com.example.demo.config.enums.EventStatusEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor // needed for JPA
+@NoArgsConstructor
 @AllArgsConstructor
-@Getter 
+@Getter
 @Setter
 public class EventRequestDTO {
     private String title;
@@ -18,4 +24,6 @@ public class EventRequestDTO {
     private int capacity;
     private String trailerUrl;
     private EventStatusEnum status;
+
+    private List<SeatRequestDTO> seats;
 }

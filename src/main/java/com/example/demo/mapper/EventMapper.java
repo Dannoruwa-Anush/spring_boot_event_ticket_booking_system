@@ -19,25 +19,19 @@ import com.example.demo.entity.Event;
 )
 public interface EventMapper {
 
-    // EventRequestDTO -> Event
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "posterImage", ignore = true)
     @Mapping(target = "staff", ignore = true)
     @Mapping(target = "seats", ignore = true)
     Event toEntity(EventRequestDTO dto);
 
-    // Event -> EventResponseDTO
     EventResponseDTO toResponseDTO(Event event);
 
-    // Update existing Event from EventRequestDTO
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "posterImage", ignore = true)
     @Mapping(target = "staff", ignore = true)
     @Mapping(target = "seats", ignore = true)
-    void updateEntity(
-        EventRequestDTO dto,
-        @MappingTarget Event event
-    );
+    void updateEntity(EventRequestDTO dto, @MappingTarget Event event);
 
     // List mapping
     List<EventResponseDTO> toResponseDTOList(List<Event> events);
