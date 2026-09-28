@@ -16,7 +16,6 @@ public class EventRequestDTO {
     private LocalTime eventTime;
     private String venue;
     private int capacity;
-    private String posterImage;
     private String trailerUrl;
     private EventStatusEnum status;
 }
