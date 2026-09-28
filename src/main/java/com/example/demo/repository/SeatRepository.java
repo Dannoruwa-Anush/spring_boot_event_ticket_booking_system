@@ -7,4 +7,5 @@ import com.example.demo.entity.Seat;
 public interface SeatRepository extends JpaRepository<Seat, Long>{
     
     // Custom Quaries
+    Optional<Seat> findBySeatNumber(String seatNumber);
 }

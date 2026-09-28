@@ -44,7 +44,7 @@ public class Seat extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "seat_number", nullable = false)
+    @Column(name = "seat_number", nullable = false, unique = true)
     private String seatNumber;
 
     @Column(nullable = false)

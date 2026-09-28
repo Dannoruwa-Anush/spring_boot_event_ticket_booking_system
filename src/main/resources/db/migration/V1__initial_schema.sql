@@ -276,8 +276,8 @@ CREATE TABLE seats (
     CONSTRAINT chk_seats_price
         CHECK (price >= 0),
 
-    CONSTRAINT uq_seat_event_number
-        UNIQUE (event_id, seat_number),
+    CONSTRAINT uq_seat_number
+        UNIQUE (seat_number),
 
     CONSTRAINT fk_seats_event
         FOREIGN KEY (event_id)
